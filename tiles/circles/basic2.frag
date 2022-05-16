@@ -9,6 +9,7 @@ uniform vec2 u_resolution;
 uniform float bkcolor;
 uniform float shapecolor;
 uniform float shapechoice;
+//#define shapechoice 3.0;
 
 #define S smoothstep
 #define CG colorGradient
@@ -272,7 +273,7 @@ void main()
   
   vec3 bkcol = chooseColor( bkcolor ); 
   vec3 shapecol = chooseColor( shapecolor );
-  col += chooseShape( shapechoice, uv, bkcol, shapecol );
+  col += chooseShape(3.0, uv, bkcol, shapecol );
 
   gl_FragColor = vec4(col,1.0);
 }
