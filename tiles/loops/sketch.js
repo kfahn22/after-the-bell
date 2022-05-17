@@ -15,7 +15,7 @@ preload = () => {
 setup = () => {
     pixelDensity(1);
     // shaders require WEBGL mode to work
-    createCanvas(600, 600, WEBGL);
+    createCanvas(500, 500, WEBGL);
     noStroke();
 }
 

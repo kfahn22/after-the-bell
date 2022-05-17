@@ -18,11 +18,7 @@ uniform float shapechoice;
 #define YELLOW vec3(255,255,0)/255.
 
 #define GREY vec3(201,206,204)/255.
-#define TEAL1 vec3(18,88,98)/255.
-#define TEAL vec3(54,88,101)/255.
-#define LTGREY vec3(251,249,248)/255.
-
-
+#define TEAL vec3(18,88,98)/255.
 #define WHITE vec3(1.)/255.
 
 #define PURPLE vec3(63,46,86)/255.
@@ -245,46 +241,11 @@ float sdOutline( vec2 uv, float x, float y, vec2 r ) {
 }
 
 
- //float m = sdLrgSqLoop( uv, 0.0, .0, .025, .1);
+ //float m = sdSquareLoop( uv, -.25, .0, .025, .1);
 
-float sdLrgSqLoop( vec2 uv, float a, float b, float c, float d ) {
+float sdSquareLoop( vec2 uv, float a, float b, float c1, float d1, float c2, float d2, float c3, float d3, float c4, float d4 ) {
   // left vertical
-   float s1 = sdBox( uv - vec2(a-.25, b+.0), vec2(c, d*2.75) );
-   float m1 = S(0.008, 0.0, s1);
-   // right vertical
-   float s2= sdBox( uv - vec2(a , b - .2), vec2(c, d*4.75) );
-   float m2 = S(0.008, 0.0, s2);
-   // top horizontal
-   float s3= sdBox( uv - vec2(a - .125, b + .25), vec2(d, c) );
-   float m3 = S(0.008, 0.0, s3);
-   //bottom horizontal
-   float s4= sdBox( uv - vec2(a + .375, b - .25), vec2(6.0*d, c) );
-   float m4 = S(0.008, 0.0, s4);
-   float mm1 = m1 + m2;
-   float mm2 = m3 + m4;
-   return  mm1 + mm2 - min(mm1, mm2);
-}
-
-float sdSmSqLoop( vec2 uv, float a, float b, float c, float d ) {
-  // left vertical
-   float s1 = sdBox( uv - vec2(a-.25, b+.125), vec2(c, d*1.5) );
-   float m1 = S(0.008, 0.0, s1);
-   // right vertical
-   float s2= sdBox( uv - vec2(a , b - .2), vec2(c, d*4.75) );
-   float m2 = S(0.008, 0.0, s2);
-   // top horizontal
-   float s3= sdBox( uv - vec2(a - .125, b + .25), vec2(d, c) );
-   float m3 = S(0.008, 0.0, s3);
-   //bottom horizontal
-   float s4= sdBox( uv - vec2(a + .375, b - .0), vec2(6.0*d, c) );
-   float m4 = S(0.008, 0.0, s4);
-   float mm1 = m1 + m2;
-   float mm2 = m3 + m4;
-   return  mm1 + mm2 - min(mm1, mm2);
-}
-
-float sdSquareLoop( vec2 uv, float a, float b, float c1, float d1, float c2, float d2, float c3, float d3,  float c4, float d4) {
-    float s1 = sdBox( uv - vec2(a-.15, b+.075), vec2(c1*.025, d1*0.1) );
+   float s1 = sdBox( uv - vec2(a-.15, b+.075), vec2(c1*.025, d1*0.1) );
    float m1 = S(0.008, 0.0, s1);
    // right vertical
    float s2= sdBox( uv - vec2(a , b - .101), vec2(c2*0.025, d2*0.1) );
@@ -300,19 +261,36 @@ float sdSquareLoop( vec2 uv, float a, float b, float c1, float d1, float c2, flo
    return  mm1 + mm2 - min(mm1, mm2);
 }
 
-float doubleSquareLoops( vec2 uv, float x, float y) {
-    float m1 = sdSquareLoop(uv, -0.1, 0.1, 1., 1., 1., 2.75, 0.25, 1., 0.25, 2.25);
-    float m2 = sdSquareLoop(vec2(-uv.x, uv.y), -0.1, 0.1, 1., 1., 1., 2.75, 0.25, 1., 0.25, 2.25);
-    float s3 = sdBox( vec2(uv.x, uv.y) - vec2(-0.3, -0.25), vec2(.2, .025));
-    float m3 = S(0.008, 0.0, s3);
-    float s4 = sdBox( vec2(uv.x, uv.y) - vec2(0.3, -0.25), vec2(.2, .025));
-    float m4 = S(0.008, 0.0, s4);
-    float mm1 = m1 + m2 - min(m1, m2);
-    float mm2 = m3 + m4;
-    return mm1 + mm2 - min(mm1, mm2);
-    //return m1 + m2 ;
-}
- 
+// float doubleSquareLoops( vec2 uv, float x, float y) {
+//     float sdSquareLoop( vec2 uv, float a, float b, float c1, float d1, float c2, float d2, float c3, flo
+//     float s1 = sdBox( uv - vec2(a-.15, b+.075), vec2(c1*.025, d1*0.1) );
+//    float m1 = S(0.008, 0.0, s1);
+//    // right vertical
+//    float s2= sdBox( uv - vec2(a , b - .101), vec2(c2*0.025, d2*0.1) );
+//    float m2 = S(0.008, 0.0, s2);
+//    // top horizontal
+//    float s3= sdBox( uv - vec2(a - .075, b + .175), vec2(d3*0.1, c3*.025) );
+//    float m3 = S(0.008, 0.0, s3);
+//    //bottom horizontal
+//    float s4= sdBox( uv - vec2(a + .05, b - .025), vec2(d4*0.1, c4*.025) );
+//    float m4 = S(0.008, 0.0, s4);
+//    float mm1 = m1 + m2;
+//    float mm2 = m3 + m4;
+//    return  mm1 + mm2 - min(mm1, mm2);
+//     float m1 = sdSquareLoop(uv, -0.1, 0.1, 1., 1., 1., 2.75, 0.25, 1., 0.25, 2.25);
+//     float m2 = sdSquareLoop(vec2(-uv.x, uv.y), -0.1, 0.1, 1., 1., 1., 2.75, 0.25, 1., 0.25, 2.25);
+//     float s3 = sdBox( vec2(uv.x, uv.y) - vec2(-0.3, -0.25), vec2(.2, .025));
+//     float m3 = S(0.008, 0.0, s3);
+//     float s4 = sdBox( vec2(uv.x, uv.y) - vec2(0.3, -0.25), vec2(.2, .025));
+//     float m4 = S(0.008, 0.0, s4);
+//     float mm1 = m1 + m2 - min(m1, m2);
+//     float mm2 = m3 + m4;
+//     return mm1 + mm2 - min(mm1, mm2);
+//     //return m1 + m2 ;
+// }
+
+
+  
 // float roundLoop1( vec2 uv) {
 //   // float s1 = sdEllipse( uv, vec2(.05, .05));
 //   // float m1 = S(0.008, 0.0, s1);
@@ -369,46 +347,46 @@ float roundLoop2( vec2 uv, float w) {
 }
 
 // // Choose shape
-vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
-  vec3 col = vec3(0.0);
+// vec3 chooseShape( float choice, vec2 uv, vec3 col1, vec3 col2 ) {
+//   vec3 col = vec3(0.0);
 //   // vec3 bkcol = chooseColor( col1 ); 
 //   // vec3 shapecol = chooseColor( col2 );
-       
-   if (shapechoice == 0.0) {
-     col = col1;
-   }
-    //  Large Square Loop
-   else if (shapechoice == 1.0) {
-    float ls = sdLrgSqLoop( uv, 0.0, 0.0, 0.025, 0.1);
-    col += (1. - ls) * col1 + ls * col2;
-    }  
-    // Small square loop
-  else if (shapechoice == 2.0) {
-    float ss = sdSmSqLoop(uv, 0.0, 0.0, 0.025, 0.1);
-    col += (1. - ss) * col1 + ss * col2;
-  }
-  // Double square loops
-  else if (shapechoice == 3.0) {
-    float ds = doubleSquareLoops( uv, 0.0, 0.0);
-     col += (1. - ds) * col1 + ds * col2;
-  }
- else if (shapechoice == 4.0) {
-     // Round Loop 1 
-    float rl = roundLoop1( uv - vec2(0.0, 0.05), 0.16 );
-     col += (1. - rl) * col1 + rl * col2;
- }
- else if (shapechoice == 5.0) {
-     // Round Loop 2
-    float rl2 = roundLoop2(uv - vec2(0.0, 0.05), 0.16 );
-    col += (1. - rl2) * col1 + rl2 * col2;
-  }
+
+//    if (shapechoice == 0.0) {
+//      col = col1;
+//    }
+//     //  Half circle
+//    else if (shapechoice == 1.0) {
+//     float hc = halfCircle(uv);
+//     col += (1. - hc) * col1 + hc * col2;
+//     }  
+//     // Lens
+//   else if (shapechoice == 2.0) {
+//     float l = lens(uv);
+//     col += (1. - l) * col1 + l * col2;
+//   }
+//   else if (shapechoice == 3.0) {
+//     // Column
+//     float c = column(uv);
+//      col += (1. - c) * col1 + c * col2;
+//   }
+//  else if (shapechoice == 4.0) {
+//      // Diamond
+//     float d = diamond(uv);
+//      col += (1. - d) * col1 + d * col2;
+//  }
+//  else if (shapechoice == 5.0) {
+//      // Junction
+//     float j = junction(uv);
+//     col += (1. - j) * col1 + j * col2;
+//   }
 //   // Cross 
 // else if (shapechoice == 6.0) {
 //     float cr = cross(uv);
 //     col += (1. - cr) * col1 + cr * col2;
 //   }
- return col;
-}
+//  return col;
+// }
 
 void main()
 {
@@ -421,13 +399,11 @@ void main()
   //col += cs;
   //   vec3 bkcol = chooseColor( bkcolor ); 
   //   vec3 shapecol = chooseColor( shapecolor );
-    col += chooseShape( 4.0, uv, LTGREY, TEAL );
-   // vec2 st = vec2(abs(uv.x), uv.y);
+  //   col += chooseShape( shapechoice, uv, bkcol, shapecol );
+    vec2 st = vec2(abs(uv.x), uv.y);
     //float m = sdSquareLoops( uv, 0.0, 0.0 );
-    // float m = sdRoundLoop( uv - vec2(0.0, 0.05), 0.16 );
-    // float m = sdSmSqLoop( uv, 0.0, .0, .025, .1);
-    // col += (1. - m) * LTGREY + m * TEAL;
-
+    float m = roundLoop( uv - vec2(0.0, 0.05), 0.16 );
+    col += (1. - m) * GREY + m * TEAL;
 
   gl_FragColor = vec4(col,1.0);
 }
