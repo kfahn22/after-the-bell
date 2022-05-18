@@ -67,7 +67,77 @@ float sdRoundedBox( vec2 uv, vec2 b, vec4 r) {
   vec2 q = abs(uv) - b + r.x;
   return min( max(q.x, q.y), 0.0) + length(max(q, 0.0) ) - r.x;
 }
-
+// Function to check for symmetry of design
+vec3 checkSymmetry( vec2 uv) {
+    float d1 = sdSegment(uv, vec2(-.5, .0), vec2(0.5, .0));
+    float l1 = S(.008, .0, d1); // horizontal center line
+    float d2 = sdSegment(uv, vec2(-.5, -.25), vec2(0.5, -.25));
+    float l2 = S(.008, .0, d2); // horizontal line
+    float d3 = sdSegment(uv, vec2(-.5, .25), vec2(0.5, .25));
+    float l3 = S(.008, .0, d3); // horizontal line
+    float d4 = sdSegment(uv, vec2(-.5, -.125), vec2(0.5, -.125));
+    float l4 = S(.008, .0, d4); // horizontal line
+    float d5 = sdSegment(uv, vec2(-.5, .125), vec2(0.5, .125));
+    float l5 = S(.008, .0, d5); // horizontal line
+    float d6 = sdSegment(uv, vec2(-.5, -.0625), vec2(0.5, -.0625));
+    float l6 = S(.008, .0, d6); // horizontal line
+    float d7 = sdSegment(uv, vec2(-.5, .0625), vec2(0.5, .0625));
+    float l7 = S(.008, .0, d7); // horizontal line  
+    float d8 = sdSegment(uv, vec2(-.5, -.1875), vec2(0.5, -.1875));
+    float l8 = S(.008, .0, d8); // horizontal line
+    float d9 = sdSegment(uv, vec2(-.5, .1875), vec2(0.5, .1875));
+    float l9 = S(.008, .0, d9); // horizontal line  
+    float d10 = sdSegment(uv, vec2(-.5, -.3125), vec2(0.5, -.3125));
+    float l10 = S(.008, .0, d10); // horizontal line
+    float d11 = sdSegment(uv, vec2(-.5, .3125), vec2(0.5, .3125));
+    float l11 = S(.008, .0, d11); // horizontal line  
+    float d12 = sdSegment(uv, vec2(-.5, -.375), vec2(0.5, -.375));
+    float l12 = S(.008, .0, d12); // horizontal line
+    float d13 = sdSegment(uv, vec2(-.5, .375), vec2(0.5, .375));
+    float l13 = S(.008, .0, d13); // horizontal line  
+    float d14 = sdSegment(uv, vec2(-.5, -.4375), vec2(0.5, -.4375));
+    float l14 = S(.008, .0, d14); // horizontal line
+    float d15 = sdSegment(uv, vec2(-.5, .4375), vec2(0.5, .4375));
+    float l15 = S(.008, .0, d15); // horizontal line  
+    vec3 l = l1 * RED  + (l2  + l3 + l4 + l5 + l6 + l7 + l8 + l9 
+          + l10 + l11 + l12 + l13 + l14 + l15) * YELLOW;
+    // vertical lines
+    float d16 = sdSegment(uv, vec2(0., -.5), vec2(0., .5));
+    float v16 = S(.008, .0, d16); // vertical center line
+    float d17 = sdSegment(uv, vec2(0.25, 0.5), vec2(.25, -0.5));
+    float v17 = S(.008, .0, d17); // vertical  line
+    float d18 = sdSegment(uv, vec2(0.0, -0.5), vec2(0.0, 0.5));
+    float v18 = S(.008, .0, d18); // vertical center line
+    float d19 = sdSegment(uv, vec2(-0.25, 0.5), vec2(-0.25, -0.5));
+    float v19 = S(.008, .0, d19); // vertical  line
+    float d20 = sdSegment(uv, vec2(0.125, -.5), vec2(0.125, .5));
+    float v20 = S(.008, .0, d20); // vertical line
+    float d21 = sdSegment(uv, vec2(-0.125, .5), vec2(-0.125, -.5));
+    float v21 = S(.008, .0, d21); // vertical  line
+    float d22 = sdSegment(uv, vec2(0.0625, -.5), vec2(0.0625, .5));
+    float v22 = S(.008, .0, d22); // vertical line
+    float d23 = sdSegment(uv, vec2(-0.0625, .5), vec2(-0.0625, -.5));
+    float v23 = S(.008, .0, d23); // vertical  line
+    float d24 = sdSegment(uv, vec2(.1875, .5), vec2(.1875, -.5));
+    float v24 = S(.008, .0, d24); // vertical  line
+    float d25 = sdSegment(uv, vec2(-0.1875, -.5), vec2(-0.1875, .5));
+    float v25 = S(.008, .0, d25); // vertical line
+    float d26 = sdSegment(uv, vec2(.3125, .5), vec2(.3125, -.5));
+    float v26 = S(.008, .0, d26); // vertical  line
+    float d27 = sdSegment(uv, vec2(.375, .5), vec2(.375, -.5));
+    float v27 = S(.008, .0, d27); // vertical  line
+    float d28 = sdSegment(uv, vec2(-0.375, -.5), vec2(-0.375, .5));
+    float v28 = S(.008, .0, d28); // vertical line
+    float d29 = sdSegment(uv, vec2(-.3125, .5), vec2(-.3125, -.5));
+    float v29 = S(.008, .0, d29); // vertical  line
+    float d30 = sdSegment(uv, vec2(.4375, .5), vec2(.4375, -.5));
+    float v30 = S(.008, .0, d30); // vertical  line
+    float d31 = sdSegment(uv, vec2(-.4375, .5), vec2(-.4375, -.5));
+    float v31 = S(.008, .0, d31); // vertical  line
+    vec3 v = v16  * RED + (v17 + v18 + v19 + v20 + v21 + v22
+     + v23 + v24 + v25 + v26 + v27 + v28 + v29 + v30 + v31) * YELLOW;
+    return l + v;
+}
 // Function to choose colors 
 vec3 chooseColor( float choice ) {
     vec3 colchoice;
