@@ -104,6 +104,27 @@ float sdTrapezoid(  vec2 p, float r1, float r2, float he )
     return s*sqrt( min(dot2(ca),dot2(cb)) );
 }
 
+// From Inigo Quilez
+float sdEquilateralTriangle( vec2 p )
+{
+    const float k = sqrt(3.0);
+    p.x = abs(p.x) - 1.0;
+    p.y = p.y + 1.0/k;
+    if( p.x+k*p.y>0.0 ) p = vec2(p.x-k*p.y,-k*p.x-p.y)/2.0;
+    p.x -= clamp( p.x, -2.0, 0.0 );
+    return -length(p)*sign(p.y);
+}
+// From Inigo Quilez
+float sdTriangleIsosceles( vec2 p, vec2 q )
+{
+    p.x = abs(p.x);
+    vec2 a = p - q*clamp( dot(p,q)/dot(q,q), 0.0, 1.0 );
+    vec2 b = p - q*vec2( clamp( p.x/q.x, 0.0, 1.0 ), 1.0 );
+    float s = -sign( q.y );
+    vec2 d = min( vec2( dot(a,a), s*(p.x*q.y-p.y*q.x) ),
+                  vec2( dot(b,b), s*(p.y-q.y)  ));
+    return -sqrt(d.x)*sign(d.y);
+}
 // // From Inigo Quilez
 // float sdEllipse( vec2 p, vec2 ab )
 // {
@@ -486,19 +507,44 @@ float roundLoop4( vec2 uv, float w) {
 }
 
 // // NE, SE, NW, SW
-// float doubleRdLoop( vec2 uv ) {
-//   float s = abs(sdRoundedBox( uv - vec2(-0.5, 0.15), vec2(.5, .25), vec4(0.25, 0.25, 0.0, 0.0))) - 0.025;
-//   float m = S(0.008, 0.0, s);
-//   return m;
-// }
-
-
-// NE, SE, NW, SW
-float doubleRdLoop2( vec2 uv ) {
-  float s = abs(sdRoundedBox( uv - vec2(-0.5, 0.15), vec2(.5, .25), vec4(0.25, 0.25, 0.0, 0.0))) - 0.025;
+float doubleRdLoop( vec2 uv ) {
+   float s = abs(sdRoundedBox( uv - vec2(0.0, 0.0), vec2(.225, .225), vec4(0.25, 0.0, 0.25, 0.025))) - 0.025;
   float m = S(0.008, 0.0, s);
   return m;
 }
+
+
+// NE, SE, NW, SW
+float tiltedLoop( vec2 uv ) {
+  float s1 = abs(sdRoundedBox( uv - vec2(0.0, 0.0), vec2(.25, .25), vec4(0.25, 0.0, 0.0, 0.25))) - 0.025;
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = sdBox( uv- vec2(0.25, -0.35), vec2(0.025, .15));
+  float m2 = S(0.008, 0.0, s2);
+  float s3 = sdBox( uv- vec2(0.35, -0.25), vec2(.15, 0.025));
+  float m3 = S(0.008, 0.0, s3);
+  float mm = m1 + m2 - min( m1, m2 );
+  return mm + m3 - min(mm, m3);
+}
+
+// NE, SE, NW, SW
+float tiltedLoop2( vec2 uv ) {
+  float s1 = abs(sdRoundedBox( uv - vec2(0.0, 0.0), vec2(.25, .25), vec4(0.25, 0.0, 0.0, 0.25))) - 0.025;
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = abs(sdRoundedBox( uv - vec2(0.025, -0.02), vec2(.23, .22), vec4(0.23, 0.0, 0.23, 0.23))) - 0.02;
+  float m2 = S(0.008, 0.0, s2);
+  float s3 = sdBox( uv- vec2(0.25, -0.35), vec2(0.026, .15));
+  float m3 = S(0.008, 0.0, s3);
+  float s4 = sdBox( uv- vec2(0.35, -0.25), vec2(.15, 0.025));
+  float m4 = S(0.008, 0.0, s4);
+  float mm1 = m1 + m2 - min(m1, m2);
+  float s5 = sdTriangleIsosceles( 2.0*Rot(PI*5./4.)*uv - vec2(0.044, -0.555), vec2(0.28, 0.2));
+  float m5 = S(0.008, 0.0, s5);
+  float s6 = sdTriangleIsosceles( 2.0*Rot(PI*4.5/8.)*uv - vec2(0.45, -0.1), vec2(0.15, 0.50));
+  float m6 = S(0.008, 0.0, s6);
+  float mm2 = mm1 + m5 - min(mm1, m5);
+ return  mm2 + m6 - min(mm2, m6);
+}
+
 
 float doubleRdLoop( vec2 uv, float w ) {
   uv = vec2( abs(uv.x), uv.y );
@@ -575,16 +621,21 @@ vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
     col += (1. - dr) * col1 + dr * col2;
   }
   else if (shapechoice == 10.0) {
-     // Double round Loop 
-    float dr = doubleRdLoop2( uv, 0.16 );
-    col += (1. - dr) * col1 + dr * col2;
+     // Tilted Loop 
+    float tl2 = tiltedLoop( uv );
+    col += (1. - tl2) * col1 + tl2 * col2;
+  }
+  else if (shapechoice == 11.0) {
+     // Tilted Loop 2
+    float tl2 = tiltedLoop2( uv );
+    col += (1. - tl2) * col1 + tl2 * col2;
   }
  // Kink
-else if (shapechoice == 11.0) {
+else if (shapechoice == 12.0) {
     float k1 = sdKink1(uv);
     col += (1. - k1) * col1 + k1 * col2;
   }
-else if (shapechoice == 12.0) {
+else if (shapechoice == 13.0) {
     float k2 = sdKink2(uv);
     col += (1. - k2) * col1 + k2 * col2;
   }
@@ -602,7 +653,7 @@ void main()
  //col += cs;
   //   vec3 bkcol = chooseColor( bkcolor ); 
   //   vec3 shapecol = chooseColor( shapecolor );
-    col += chooseShape( 9.0, uv, LTGREY, TEAL );
+    col += chooseShape( 11.0, uv, LTGREY, TEAL );
    // vec2 st = vec2(abs(uv.x), uv.y);
     //float m = sdSquareLoops( uv, 0.0, 0.0 );
     // float m = sdRoundLoop( uv - vec2(0.0, 0.05), 0.16 );
