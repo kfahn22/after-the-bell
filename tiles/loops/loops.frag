@@ -105,6 +105,17 @@ float sdTrapezoid(  vec2 p, float r1, float r2, float he )
 }
 
 // From Inigo Quilez
+float sdMoon(vec2 p, float d, float ra, float rb )
+{
+    p.y = abs(p.y);
+    float a = (ra*ra - rb*rb + d*d)/(2.0*d);
+    float b = sqrt(max(ra*ra-a*a,0.0));
+    if( d*(p.x*b-p.y*a) > d*d*max(b-p.y,0.0) )
+          return length(p-vec2(a,b));
+    return max( (length(p          )-ra),
+               -(length(p-vec2(d,0))-rb));
+}
+// From Inigo Quilez
 float sdEquilateralTriangle( vec2 p )
 {
     const float k = sqrt(3.0);
@@ -125,40 +136,6 @@ float sdTriangleIsosceles( vec2 p, vec2 q )
                   vec2( dot(b,b), s*(p.y-q.y)  ));
     return -sqrt(d.x)*sign(d.y);
 }
-// // From Inigo Quilez
-// float sdEllipse( vec2 p, vec2 ab )
-// {
-//     p = abs(p); if( p.x > p.y ) {p=p.yx;ab=ab.yx;}
-//     float l = ab.y*ab.y - ab.x*ab.x;
-//     float m = ab.x*p.x/l;      float m2 = m*m; 
-//     float n = ab.y*p.y/l;      float n2 = n*n; 
-//     float c = (m2+n2-1.0)/3.0; float c3 = c*c*c;
-//     float q = c3 + m2*n2*2.0;
-//     float d = c3 + m2*n2;
-//     float g = m + m*n2;
-//     float co;
-//     if( d<0.0 )
-//     {
-//         float h = acos(q/c3)/3.0;
-//         float s = cos(h);
-//         float t = sin(h)*sqrt(3.0);
-//         float rx = sqrt( -c*(s + t + 2.0) + m2 );
-//         float ry = sqrt( -c*(s - t + 2.0) + m2 );
-//         co = (ry+sign(l)*rx+abs(g)/(rx*ry)- m)/2.0;
-//     }
-//     else
-//     {
-//         float h = 2.0*m*n*sqrt( d );
-//         float s = sign(q+h)*pow(abs(q+h), 1.0/3.0);
-//         float u = sign(q-h)*pow(abs(q-h), 1.0/3.0);
-//         float rx = -s - u - c*4.0 + 2.0*m2;
-//         float ry = (s - u)*sqrt(3.0);
-//         float rm = sqrt( rx*rx + ry*ry );
-//         co = (ry/sqrt(rm-rx)+2.0*g/rm-m)/2.0;
-//     }
-//     vec2 r = ab * vec2(co, sqrt(1.0-co*co));
-//     return length(r-p) * sign(p.y-r.y);
-// }
 
 // From Inigo Quilez
 // For vec4 r corners are NE, SE, NW, SW
@@ -211,7 +188,7 @@ vec3 chooseColor( float choice ) {
 }
 
 // Function to check for symmetry of design
-vec3 checkSymmetry( vec2 uv) {
+vec3 checkSymmetry( vec2 uv ) {
     float d1 = sdSegment(uv, vec2(-.5, .0), vec2(0.5, .0));
     float l1 = S(.008, .0, d1); // horizontal center line
     float d2 = sdSegment(uv, vec2(-.5, -.25), vec2(0.5, -.25));
@@ -245,14 +222,12 @@ vec3 checkSymmetry( vec2 uv) {
     vec3 l = (l1 + l2 + l3) * RED  + ( l4 + l5 + l6 + l7 + l8 + l9 
           + l10 + l11 + l12 + l13 + l14 + l15) * YELLOW;
     // vertical lines
-    float d16 = sdSegment(uv, vec2(0., -.5), vec2(0., .5));
+    float d16 = sdSegment(uv, vec2(0.0, -0.5), vec2(0.0, 0.5));
     float v16 = S(.008, .0, d16); // vertical center line
     float d17 = sdSegment(uv, vec2(0.25, 0.5), vec2(.25, -0.5));
     float v17 = S(.008, .0, d17); // vertical  line
-    float d18 = sdSegment(uv, vec2(0.0, -0.5), vec2(0.0, 0.5));
-    float v18 = S(.008, .0, d18); // vertical center line
-    float d19 = sdSegment(uv, vec2(-0.25, 0.5), vec2(-0.25, -0.5));
-    float v19 = S(.008, .0, d19); // vertical  line
+    float d18 = sdSegment(uv, vec2(-0.25, 0.5), vec2(-0.25, -0.5));
+    float v18 = S(.008, .0, d18); // vertical  line
     float d20 = sdSegment(uv, vec2(0.125, -.5), vec2(0.125, .5));
     float v20 = S(.008, .0, d20); // vertical line
     float d21 = sdSegment(uv, vec2(-0.125, .5), vec2(-0.125, -.5));
@@ -277,37 +252,85 @@ vec3 checkSymmetry( vec2 uv) {
     float v30 = S(.008, .0, d30); // vertical  line
     float d31 = sdSegment(uv, vec2(-.4375, .5), vec2(-.4375, -.5));
     float v31 = S(.008, .0, d31); // vertical  line
-    vec3 v = v16  * RED + (v17 + v18 + v19 + v20 + v21 + v22
+    vec3 v = (v16 + v17 + v18) * RED + ( v20 + v21 + v22
      + v23 + v24 + v25 + v26 + v27 + v28 + v29 + v30 + v31) * YELLOW;
     return l + v;
 }
 
-float sdOutline( vec2 uv, float x, float y, vec2 r ) {
- // vec2 st = vec2( abs(uv.x), uv.y );
-  float s = abs( sdBox(uv - vec2(x, y), r ) ) - 0.02;
-  float m = S(.008, .0, s);
-  return m;
+// Small square corner
+float sdSmallCorner( vec2 uv ) {
+  float s1 = sdBox( uv - vec2(-0.5, 0.25), vec2(0.25, 0.05) );
+  float m1 = S(.008, .0, s1);
+  float s2 = sdBox( uv - vec2(-0.25,0.35), vec2(0.05, 0.15) );
+  float m2 = S(.008, .0, s2);
+  return m1 + m2 - min(m1, m2);
 }
 
+// Two small square corners
+float sdSmallCorners( vec2 uv ) {
+  float s1 = sdBox( uv - vec2(-0.5, 0.25), vec2(0.25, 0.05) );
+  float m1 = S(.008, .0, s1);
+  float s2 = sdBox( uv - vec2(-0.25,0.35), vec2(0.05, 0.15) );
+  float m2 = S(.008, .0, s2);
+  float mm1 = m1 + m2 - min(m1, m2);
+  float s3 = sdBox( uv - vec2(0.35, -0.25), vec2(0.15, 0.05) );
+  float m3 = S(.008, .0, s3);
+  float s4 = sdBox( uv - vec2(0.25,-0.35), vec2(0.05, 0.15) );
+  float m4 = S(.008, .0, s4);
+  float mm2 = m3 + m4 - min(m3, m4);
+  return mm1 + mm2 - min(mm1,mm2);
+}
+
+// Large square corner
+float sdLargeCorner( vec2 uv ) {
+  float s1 = sdBox( uv - vec2(-0.25, 0.25), vec2(0.55, 0.05) );
+  float m1 = S(.008, .0, s1);
+  float s2 = sdBox( uv - vec2(0.25, -0.25), vec2(0.05, 0.45) );
+  float m2 = S(.008, .0, s2);
+  return m1 + m2 - min(m1, m2);
+}
 
 float sdKink1( vec2 uv) {
-  float s1 = sdBox( uv - vec2(-0.25, 0.25), vec2(0.25, 0.025) );
+  float s1 = sdBox( uv - vec2(-0.25, 0.25), vec2(0.25, 0.05) );
   float m1 = S(.008, .0, s1);
-  float s2 = sdBox( uv - vec2(0.0, 0.0), vec2(0.025, 0.275) );
+  float s2 = sdBox( uv - vec2(0.0, 0.0), vec2(0.05, 0.3) );
   float m2 = S(.008, .0, s2);
-  float s3 = sdBox( uv - vec2(0.25, -0.25), vec2(0.25, 0.025) );
+  float s3 = sdBox( uv - vec2(0.25, -0.25), vec2(0.25, 0.05) );
   float m3 = S(.008, .0, s3);
   return m1 + m2 + m3 - min(m1, m2) - min(m3, m2);
 }
 
-float sdKink2( vec2 uv) {
-  float s1 = sdBox( uv - vec2(-0.25, 0.25), vec2(0.25, 0.025) );
+float sdSmallCircle( vec2 uv) {
+  float s1 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.25)) - 0.05;
   float m1 = S(.008, .0, s1);
-  float s2 = sdBox( uv - vec2(0.0, 0.125), vec2(0.025, 0.15) );
+  return m1;
+}
+
+float sdBigCircle( vec2 uv) {
+  float s1 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.75)) - 0.05;
+  float m1 = S(.008, .0, s1);
+  return m1;
+}
+
+float sdBigCircles( vec2 uv) {
+  float s1 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.75)) - 0.05;
+  float m1 = S(.008, .0, s1);
+  float s2 = abs(sdCircle( uv - vec2(0.5, 0.5), 0.75)) - 0.05;
   float m2 = S(.008, .0, s2);
-  float s3 = sdBox( uv - vec2(0.25, 0.0), vec2(0.25, 0.025) );
+  return m1 + m2 - min(m1,m2);
+}
+
+// Two interlocking squares
+float sdLockingSq( vec2 uv) {
+  float s1 = sdBox( uv - vec2(-0.25, 0.25), vec2(0.55, 0.05) );
+  float m1 = S(.008, .0, s1);
+  float s2 = sdBox( uv - vec2(0.25, -0.25), vec2(0.05, 0.45) );
+  float m2 = S(.008, .0, s2);
+  float s3 = sdBox( uv - vec2(0.25, -0.25), vec2(0.55, 0.05) );
   float m3 = S(.008, .0, s3);
-  return m1 + m2 + m3 - min(m1, m2) - min(m3, m2);
+  float s4 = sdBox( uv - vec2(-0.25, 0.25), vec2(0.05, 0.45) );
+  float m4 = S(.008, .0, s4);
+  return m1 + m2 + m3 + m4 - min(m1, m2) - min(m3, m2) - min(m1, m4) - min(m3, m4);
 }
 
 float sdLrgSqLoop( vec2 uv, float a, float b, float c, float d ) {
@@ -418,9 +441,9 @@ float sdOval( vec2 uv, float w1, float w2 ) {
 }
 
 float sdOval2( vec2 uv) {
-  float s1 = sdEgg( (Rot(PI * 4./4.) * uv) - vec2(0.0, 0.0), .2, .075);
+  float s1 = sdEgg( (Rot(PI * 4./4.) * uv) - vec2(0.0, -0.125), .275, .075);
   float m1 = S(0.008, 0.0, s1);
-  float s2 = sdEgg( (Rot(PI * 4./4.) * uv) - vec2(0.0, 0.05), .15, .05);
+  float s2 = sdEgg( (Rot(PI * 4./4.) * uv) - vec2(0.0, -0.1), .20, .05);
   float m2 = S(0.008, 0.0, s2);
   return m1 - m2;
 }
@@ -480,25 +503,25 @@ float roundLoop3( vec2 uv, float w) {
   return  mm2 + mm3 - min(mm2, mm3);
 }
 
-
+// Uses egg to make loop
 float roundLoop4( vec2 uv, float w) {
-  float s1 = sdOval2( uv - vec2(0.0, 0.25));
+  float s1 = sdOval2( uv - vec2(0.0, 0.30));
   float m1 = S(0.008, 0.0, s1);
    // Change angle to change arc sin(.45), cos(.90)
    // Second parameters determines placement 
-  float s2 = abs(sdArc(  uv - vec2(0.0, 0.20), vec2( sin(.45), cos(.90) ), .5, .6)) - .01;
+  float s2 = abs(sdArc(  uv - vec2(0.0, 0.26), vec2( sin(.45), cos(.90) ), .5, .6)) - .035;
   float m2 = S(0.008, 0.0, s2);
   // Add a box to eliminate curved part of arc at edges
-  float s3 = sdBox ( vec2((uv.x), uv.y) - vec2( -0.35, -0.09), vec2(0.15, 0.1));
+  float s3 = sdBox ( uv - vec2( -0.35, -0.05), vec2(0.15, 0.135));
   float m3 = S(0.008, 0.0, s3);
-  float s4 = sdBox ( vec2((uv.x), uv.y) - vec2( 0.35, -0.09), vec2(0.15, 0.1));
+  float s4 = sdBox ( vec2(uv.x, uv.y) - vec2( 0.35, -0.05), vec2(0.15, 0.135));
   float m4 = S(0.008, 0.0, s4);
   float mm1 = m2 - min(m2, m3) - min(m2, m4);
   // Note:  altering (x,y) position is counter-intuitive
   // b/c there is a rotation, change uv.x to alter vertical pos, uv.y to alter horizontal pos
-  float s5 = sdTrapezoid( (Rot(PI*2./4.) * uv) - vec2(-0.09, 0.345), .01, .025, .15);
+  float s5 = sdTrapezoid( (Rot(PI*2./4.) * uv) - vec2(-0.03, 0.35), .035, .05, .15);
   float m5 = S(0.008, 0.0, s5);
-  float s6 = sdTrapezoid( (Rot(PI*2./4.) * uv) - vec2(-0.09, -0.345), .025, .01, .15);
+  float s6 = sdTrapezoid( (Rot(PI*2./4.) * uv) - vec2(-0.03, -0.35), .05, .035, .15);
   float m6 = S(0.008, 0.0, s6);
   float mm2 = 1. - m1;
   float mm3 =  mm1 + mm2 - min(mm1, mm2);
@@ -507,20 +530,80 @@ float roundLoop4( vec2 uv, float w) {
 }
 
 // // NE, SE, NW, SW
-float doubleRdLoop( vec2 uv ) {
-   float s = abs(sdRoundedBox( uv - vec2(0.0, 0.0), vec2(.225, .225), vec4(0.25, 0.0, 0.25, 0.025))) - 0.025;
-  float m = S(0.008, 0.0, s);
-  return m;
+float roundLoop5( vec2 uv ) {
+   float s1 = abs(sdRoundedBox( uv - vec2(0.0, 0.0), vec2(.25, .25), vec4(0.25, 0.0, 0.25, 0.25))) - 0.035;
+   float m1 = S(0.008, 0.0, s1);
+   float s2 = sdMoon(Rot(-PI*1./5.)*uv, .09, .23, .23);
+   float m2 = S(0.008, 0.0, s2);
+  return m1 + m2 - min(m1, m2);
 }
 
+// Fat sides
+// NE, SE, NW, SW
+float roundLoop6( vec2 uv ) {
+   float s1 = abs(sdCircle( uv - vec2(0.0, 0.075), .30)) - 0.025;
+   //float s1 = abs(sdRoundedBox( uv - vec2(0.0, 0.0), vec2(.25, .25), vec4(0.25, 0.0, 0.25, 0.25))) - 0.035;
+   float m1 = S(0.008, 0.0, s1);
+   float s2 = sdMoon(Rot(PI*0./4.)*uv - vec2(-0.05, 0.075), .15, .275, .275);
+   float m2 = S(0.008, 0.0, s2);
+   float mm1 =  m1 + m2 - min(m1, m2);
+   float s3 = sdMoon(Rot(PI)*uv - vec2(-0.05, -0.075), .15, .275, .275);
+   float m3= S(0.008, 0.0, s3);
+   float mm2 = m1 + m3 - min(m1, m3);
+   float s4 = abs(sdArc(  uv - vec2(0.0, 0.07), vec2( sin(.15), cos(.90) ), .5, .6)) - .035;
+   float m4 = S(0.008, 0.0, s4);
+   // Add a box to eliminate curved part of arc at edges
+   float s5 = sdBox ( uv - vec2( -0.35, -0.05), vec2(0.15, 0.135));
+   float m5 = S(0.008, 0.0, s5);
+   float s6 = sdBox ( vec2(uv.x, uv.y) - vec2( 0.35, -0.05), vec2(0.15, 0.135));
+   float m6 = S(0.008, 0.0, s6);
+  //  float s4= sdTrapezoid( (Rot(PI*2./4.) * uv) - vec2(-0.25, 0.345), .04, .05, .35);
+  //  float m4 = S(0.008, 0.0, s4);
+  //  float s5 = sdTrapezoid( (Rot(PI*2./4.) * uv) - vec2(-0.25, -0.345), .05, .04, .35);
+  //  float m5 = S(0.008, 0.0, s5);
+  return mm1 + mm2 - min(mm1, mm2) + m4 ;
+}
+// tilted with a fatter top
+// // NE, SE, NW, SW
+float roundLoop( vec2 uv ) {
+   float s1 = abs(sdRoundedBox( uv - vec2(0.0, 0.0), vec2(.25, .25), vec4(0.25, 0.0, 0.25, 0.25))) - 0.05;
+   float m1 = S(0.008, 0.0, s1);
+   float s2 = sdMoon(Rot(-PI*2.5/10.0)*uv, 0.09, 0.21, .21);
+   float m2 = S(0.008, 0.0, s2);
+   float mm1 = m1 + m2 - min(m1, m2);
+   float s3 = sdBox( uv - vec2(0.25, -0.25), vec2(0.05, 0.25));
+   float m3 = S(0.008, 0.0, s3);
+   float s4 = sdBox( uv - vec2(0.25, -0.25), vec2(0.25, 0.05));
+   float m4 = S(0.008, 0.0, s4);
+   float mm2 = m3 + m4 - min(m3, m4);
+  return mm1 + mm2 - min(mm1, mm2);
+}
+
+// Small circle with loop
+// // NE, SE, NW, SW
+float sdCircleLoop( vec2 uv ) {
+  float s1 = sdEgg( (Rot(-PI * 3./4.) * uv) - vec2(0.0, 0.02), .25, .075);
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = sdEgg( (Rot(-PI * 3./4.) * uv) - vec2(0.0, 0.02), .15, .015);
+  float m2 = S(0.008, 0.0, s2);
+  float s3 = sdBox( uv - vec2(0.25, -0.4), vec2(0.05, 0.20));
+  float m3 = S(0.008, 0.0, s3);
+  float s4 = sdBox( uv - vec2(0.4, -0.25), vec2(0.20, 0.05));
+  float m4 = S(0.008, 0.0, s4);
+  float s5 = abs(sdCircle( uv - vec2(-0.5, 0.5), 0.25)) - 0.05;
+  float m5 = S(.008, .0, s5);
+  float mm1 = m1 - m2;
+  float mm2 = m3 + m4 - min(m3, m4);
+  return mm1 + mm2 - min(mm1, mm2) + m5;
+}
 
 // NE, SE, NW, SW
 float tiltedLoop( vec2 uv ) {
-  float s1 = abs(sdRoundedBox( uv - vec2(0.0, 0.0), vec2(.25, .25), vec4(0.25, 0.0, 0.0, 0.25))) - 0.025;
+  float s1 = abs(sdRoundedBox( uv - vec2(0.0, 0.0), vec2(.25, .25), vec4(0.25, 0.0, 0.0, 0.25))) - 0.05;
   float m1 = S(0.008, 0.0, s1);
-  float s2 = sdBox( uv- vec2(0.25, -0.35), vec2(0.025, .15));
+  float s2 = sdBox( uv- vec2(0.25, -0.35), vec2(0.05, .15));
   float m2 = S(0.008, 0.0, s2);
-  float s3 = sdBox( uv- vec2(0.35, -0.25), vec2(.15, 0.025));
+  float s3 = sdBox( uv- vec2(0.35, -0.25), vec2(.15, 0.05));
   float m3 = S(0.008, 0.0, s3);
   float mm = m1 + m2 - min( m1, m2 );
   return mm + m3 - min(mm, m3);
@@ -528,24 +611,40 @@ float tiltedLoop( vec2 uv ) {
 
 // NE, SE, NW, SW
 float tiltedLoop2( vec2 uv ) {
-  float s1 = abs(sdRoundedBox( uv - vec2(0.0, 0.0), vec2(.25, .25), vec4(0.25, 0.0, 0.0, 0.25))) - 0.025;
+  float s1 = abs(sdRoundedBox( uv - vec2(0.0, 0.0), vec2(.25, .25), vec4(0.25, 0.0, 0.0, 0.25))) - 0.05;
   float m1 = S(0.008, 0.0, s1);
-  float s2 = abs(sdRoundedBox( uv - vec2(0.025, -0.02), vec2(.23, .22), vec4(0.23, 0.0, 0.23, 0.23))) - 0.02;
+  float s2 = sdMoon(Rot(-PI*1./4.)*uv - vec2(-0.15, 0.0), .15, .2, .2);
   float m2 = S(0.008, 0.0, s2);
+  float mm1 =  m1 + m2 - min(m1, m2);
   float s3 = sdBox( uv- vec2(0.25, -0.35), vec2(0.026, .15));
   float m3 = S(0.008, 0.0, s3);
-  float s4 = sdBox( uv- vec2(0.35, -0.25), vec2(.15, 0.025));
+  float s4 = sdBox( uv- vec2(0.35, -0.25), vec2(.15, 0.05));
   float m4 = S(0.008, 0.0, s4);
-  float mm1 = m1 + m2 - min(m1, m2);
-  float s5 = sdTriangleIsosceles( 2.0*Rot(PI*5./4.)*uv - vec2(0.044, -0.555), vec2(0.28, 0.2));
+  float s5 = sdBox( uv- vec2(0.25, -0.35), vec2(0.05, .15));
   float m5 = S(0.008, 0.0, s5);
-  float s6 = sdTriangleIsosceles( 2.0*Rot(PI*4.5/8.)*uv - vec2(0.45, -0.1), vec2(0.15, 0.50));
+  float s6 = sdBox( uv- vec2(0.35, -0.25), vec2(.15, 0.05));
   float m6 = S(0.008, 0.0, s6);
-  float mm2 = mm1 + m5 - min(mm1, m5);
- return  mm2 + m6 - min(mm2, m6);
+  float mm2 = m5 + m6 - min(m5,m6);
+  return mm1 + mm2 - min(mm1,mm2);
 }
 
-
+float doubleRdLoop( vec2 uv) {
+  vec2 st = 1.5*uv;
+  float s1 = roundLoop5(st- vec2(-0.325, 0.1));
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = roundLoop5(vec2(-st.x, st.y) - vec2(-0.325, 0.1));
+  float m2 = S(0.008, 0.0, s2);
+  float s3 = sdBox( uv - vec2(-0.05, -0.20), vec2(0.025, .27));
+  float m3 = S(0.008, 0.0, s3);
+  float s4 = sdBox( uv - vec2(0.05, -0.20), vec2(0.025, .27));
+  float m4 = S(0.008, 0.0, s4);
+  float s5 = sdBox( uv - vec2(0.0, -0.1), vec2(0.05, 0.025));
+  float m5 = S(0.008, 0.0, s5);
+  float mm = 1. - min(m1, m2);
+  float mm1 = m1 + m2 + m5 - min(m1 + m2, m5);
+  return mm  + min(m1, m3) + min(m2, m4) ;//+ mm1;
+ 
+}
 float doubleRdLoop( vec2 uv, float w ) {
   uv = vec2( abs(uv.x), uv.y );
   float s1 = sdOval( uv - vec2(0.25, 0.0), .175, 0.16);
@@ -585,10 +684,10 @@ vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
     float ss = sdSmSqLoop(uv, 0.0, 0.0, 0.025, 0.1);
     col += (1. - ss) * col1 + ss * col2;
   }
-   // Double square loops
+   //  loops
   else if (shapechoice == 3.0) {
-    float ds = doubleSquareLoops( uv - vec2(0.0, -0.06), 0.0, 0.0);
-     col += (1. - ds) * col1 + ds * col2;
+    float rl6 = roundLoop6( uv );
+     col += (1. - rl6) * col1 + rl6 * col2;
   }
   // Double square loops -- skinny verticals
   else if (shapechoice == 4.0) {
@@ -596,19 +695,19 @@ vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
      col += (1. - ds2) * col1 + ds2 * col2;
   }
  else if (shapechoice == 5.0) {
-     // Round Loop 1 
-    float rl = roundLoop1( uv  - vec2(0.0, 0.15), 0.16 );
-     col += (1. - rl) * col1 + rl * col2;
+     // one corner circle
+    float sc = sdSmallCircle( uv  );
+     col += (1. - sc) * col1 + sc * col2;
  }
  else if (shapechoice == 6.0) {
-     // Round Loop 2
-    float rl2 = roundLoop2(uv - vec2(0.0, -0.20), 0.16 );
-    col += (1. - rl2) * col1 + rl2 * col2;
+     // Two corner circles
+    float bc = sdBigCircle(uv );
+    col += (1. - bc) * col1 + bc * col2;
   }
-  else if (shapechoice == 7.0) {
-     // Round loop 3 with fatter tails
-    float rl3 = roundLoop3(uv - vec2(0.0, -0.20), 0.16 );
-    col += (1. - rl3) * col1 + rl3 * col2;
+else if (shapechoice == 7.0) {
+     // Two corner circles
+    float bc2 = sdBigCircles(uv );
+    col += (1. - bc2) * col1 + bc2 * col2;
   }
   else if (shapechoice == 8.0) {
      // Round loop with fatter tails, taller loop
@@ -616,28 +715,49 @@ vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
     col += (1. - rl4) * col1 + rl4 * col2;
   }
   else if (shapechoice == 9.0) {
-     // Double round Loop 
-    float dr = doubleRdLoop( uv, 0.16 );
-    col += (1. - dr) * col1 + dr * col2;
+     // Round loop fat top
+    float rl = roundLoop( uv );
+    col += (1. - rl) * col1 + rl * col2;
   }
   else if (shapechoice == 10.0) {
+     // Round Loop fat sides
+    float rl5 = roundLoop5( uv );
+    col += (1. - rl5) * col1 + rl5 * col2;
+  }
+  else if (shapechoice == 11.0) {
      // Tilted Loop 
     float tl2 = tiltedLoop( uv );
     col += (1. - tl2) * col1 + tl2 * col2;
   }
-  else if (shapechoice == 11.0) {
+  else if (shapechoice == 12.0) {
      // Tilted Loop 2
     float tl2 = tiltedLoop2( uv );
     col += (1. - tl2) * col1 + tl2 * col2;
   }
  // Kink
-else if (shapechoice == 12.0) {
+else if (shapechoice == 13.0) {
     float k1 = sdKink1(uv);
     col += (1. - k1) * col1 + k1 * col2;
   }
-else if (shapechoice == 13.0) {
-    float k2 = sdKink2(uv);
+else if (shapechoice == 14.0) {
+    float k2 = sdLockingSq(uv);
     col += (1. - k2) * col1 + k2 * col2;
+  }
+else if (shapechoice == 15.0) {
+    float sbc = sdSmallCorner(uv);
+    col += (1. - sbc) * col1 + sbc * col2;
+  }
+else if (shapechoice == 16.0) {
+    float lc = sdLargeCorner(uv);
+    col += (1. - lc) * col1 + lc * col2;
+  }
+else if (shapechoice == 17.0) {
+    float scs = sdSmallCorners(uv);
+    col += (1. - scs) * col1 + scs * col2;
+  }
+  else if (shapechoice == 18.0) {
+    float cl = sdCircleLoop(uv);
+    col += (1. - cl) * col1 + cl * col2;
   }
  return col;
 }
@@ -650,10 +770,10 @@ void main()
   
   vec3 cs = checkSymmetry( uv );
   
- //col += cs;
+ col += cs;
   //   vec3 bkcol = chooseColor( bkcolor ); 
   //   vec3 shapecol = chooseColor( shapecolor );
-    col += chooseShape( 11.0, uv, LTGREY, TEAL );
+    col += chooseShape( 18.0, uv, LTGREY, TEAL );
    // vec2 st = vec2(abs(uv.x), uv.y);
     //float m = sdSquareLoops( uv, 0.0, 0.0 );
     // float m = sdRoundLoop( uv - vec2(0.0, 0.05), 0.16 );
