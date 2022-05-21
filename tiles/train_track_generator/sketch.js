@@ -223,21 +223,6 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
 
 });
 
-// 
-// // Chop up source image into tiles
-// for (let i = 0; i < cols; i++) {
-//     for (let j = 0; j < rows; j++) {
-//       let x = i * w;
-//       let y = j * h;
-//       let img = createImage(w, h);
-//       img.copy(source, x, y, w, h, 0, 0, w, h);
-//       let index = i + j * cols;
-//       board.push(index);
-//       let tile = new Tile(index, img);
-//       tiles.push(tile);
-//     }
-//   }
-
 new p5(wfc => {
   //let g;
 

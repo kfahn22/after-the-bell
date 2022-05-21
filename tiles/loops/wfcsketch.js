@@ -254,7 +254,7 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
     let graphics;
   
     wfc.preload = () => {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 19; i++) {
   
             const path = "loops/loop_tiles";
             tileImages[i] = wfc.loadImage(`${path}/${i}.png`);
@@ -286,19 +286,28 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
             // } else {
                 // Load and code the tiles
                 tiles[0] = new Tile(tileImages[0], ["AA", "AA", "AA", "AA"]);
-                tiles[1] = new Tile(tileImages[1], ["AA", "AB", "AA", "AB"]);
-                tiles[2] = new Tile(tileImages[2], ["AA", "AB", "BA", "AA"]);
-                tiles[3] = new Tile(tileImages[3], ["AA", "AB", "BA", "AA"]);
-                tiles[4] = new Tile(tileImages[4], ["AA", "AB", "AA", "BA"]);
-                tiles[5] = new Tile(tileImages[5], ["AA", "AB", "AA", "BA"]);
+                tiles[1] = new Tile(tileImages[1], ["AA", "AA", "AB", "BA"]);
+                tiles[2] = new Tile(tileImages[2], ["AB", "BA", "AB", "BA"]);
+                tiles[3] = new Tile(tileImages[3], ["AA", "AA", "BB", "BB"]);
+                tiles[4] = new Tile(tileImages[4], ["AA", "AA", "BA", "AB"]);
+                tiles[5] = new Tile(tileImages[5], ["BA", "AB", "BA", "AB"]);
                 tiles[6] = new Tile(tileImages[6], ["AA", "AB", "AA", "BA"]);
-                tiles[7] = new Tile(tileImages[7], ["AA", "AB", "AA", "BA"]);
+                tiles[7] = new Tile(tileImages[7], ["AA", "AB", "BA", "AA"]);
                 tiles[8] = new Tile(tileImages[8], ["AA", "AB", "BA", "AA"]);
                 tiles[9] = new Tile(tileImages[9], ["AA", "AB", "BA", "AA"]);
+                tiles[10] = new Tile(tileImages[10], ["BA", "AB", "BA", "AB"]);
+                tiles[11] = new Tile(tileImages[11], ["BA", "AA", "AA", "AB"]);
+                tiles[12] = new Tile(tileImages[12], ["BA", "AB", "BA", "AB"]);
+                tiles[13] = new Tile(tileImages[13], ["BB", "AA", "AA", "BB"]);
+                tiles[14] = new Tile(tileImages[14], ["AA", "AA", "BA", "AB"]);
+                tiles[15] = new Tile(tileImages[15], ["BA", "AB", "BA", "AB"]);
+                tiles[16] = new Tile(tileImages[16], ["AA", "AB", "AA", "AB"]);
+                tiles[17] = new Tile(tileImages[17], ["AA", "AB", "BA", "AA"]);
+                tiles[18] = new Tile(tileImages[18], ["AA", "AB", "BA", "AA"]);
             //}
   
   
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 19; i++) {
                 for (let j = 1; j < 4; j++) {
                     tiles.push(tiles[i].rotate(j));
                 }
