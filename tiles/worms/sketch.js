@@ -9,7 +9,7 @@ let loopsShader;
 
 preload = () => {
     // load the the shader
-    loopsShader = loadShader('loops/loops.vert', 'tunnels/tunnels.frag');
+    wormsShader = loadShader('worms/worms.vert', 'worms/worms.frag');
 }
 
 setup = () => {
@@ -21,12 +21,12 @@ setup = () => {
 
 draw = () => {
     background(0);
-    loopsShader.setUniform('u_resolution', [width, height]);
-    shader(loopsShader);
+    wormsShader.setUniform('u_resolution', [width, height]);
+    shader(wormsShader);
     rect(0, 0, width, height);
 
 }
 function mousePressed() {
     //saveFrames('uv', 'png', 1, 1);
-    saveCanvas(`tunnels/tunnel_tiles/${i}`, 'png', 1, 1);
+    saveCanvas(`worms/worm_tiles/${i}`, 'png', 1, 1);
     }

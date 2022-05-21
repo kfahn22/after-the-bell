@@ -1,4 +1,4 @@
-// Frag shader creates train tiles for wave function collapse
+// Frag shader creates "worm' tiles for wave function collapse
 
 #ifdef GL_ES
 precision mediump float;
@@ -314,27 +314,7 @@ float sdKink1( vec2 uv) {
   return m1 + m2 + m3 - min(m1, m2) - min(m3, m2);
 }
 
-float sdSmallCircle( vec2 uv) {
-  float s1 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.25)) - 0.05;
-  float m1 = S(.008, .0, s1);
-  return m1;
-}
 
-float smallCornerCircles( vec2 uv) {
-  float s1 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.25)) - 0.05;
-  float m1 = S(.008, .0, s1);
-  float s2 = abs(sdCircle( uv - vec2(0.5, 0.5), 0.25)) - 0.05;
-  float m2 = S(.008, .0, s2);
-  return m1 + m2;
-}
-
-float twoCircles( vec2 uv) {
-  float s1 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.25)) - 0.05;
-  float m1 = S(.008, .0, s1);
-  float s2 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.75)) - 0.05;
-  float m2 = S(.008, .0, s2);
-  return m1 + m2;
-}
 
 float twoCircles2( vec2 uv) {
   float s1 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.25)) - 0.05;
@@ -374,6 +354,67 @@ float uTurn( vec2 uv ) {
   return m1 ;
 }
 
+float uTurns( vec2 uv ) {
+  float s1 = abs(sdRoundedBox( uv - vec2(-0.35, 0.00), vec2(.25, .25), vec4(0.25, 0.25, 0.0, 0.0))) - 0.05;
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = abs(sdRoundedBox( uv - vec2(0.35, 0.00), vec2(.25, .25), vec4(0.0, 0.0, 0.25, 0.25))) - 0.05;
+  float m2 = S(0.008, 0.0, s2);
+  return m1 + m2 ;
+}
+
+float cornerCircle( vec2 uv) {
+  float s1 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.25)) - 0.05;
+  float m1 = S(.008, .0, s1);
+  return m1;
+}
+
+float twoCornerCircles( vec2 uv) {
+  float s1 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.25)) - 0.05;
+  float m1 = S(.008, .0, s1);
+  float s2 = abs(sdCircle( uv - vec2(0.5, 0.5), 0.25)) - 0.05;
+  float m2 = S(.008, .0, s2);
+  return m1 + m2;
+}
+
+float threeCornerCircles( vec2 uv) {
+  float s1 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.25)) - 0.05;
+  float m1 = S(.008, .0, s1);
+  float s2 = abs(sdCircle( uv - vec2(0.5, 0.5), 0.25)) - 0.05;
+  float m2 = S(.008, .0, s2);
+  float s3 = abs(sdCircle( uv - vec2(0.5, -0.5), 0.25)) - 0.05;
+  float m3 = S(.008, .0, s3);
+  return m1 + m2 + m3;
+}
+
+float fourCornerCircles( vec2 uv) {
+  float s1 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.25)) - 0.05;
+  float m1 = S(.008, .0, s1);
+  float s2 = abs(sdCircle( uv - vec2(0.5, 0.5), 0.25)) - 0.05;
+  float m2 = S(.008, .0, s2);
+  float s3 = abs(sdCircle( uv - vec2(-0.5, 0.5), 0.25)) - 0.05;
+  float m3 = S(.008, .0, s3);
+  float s4 = abs(sdCircle( uv - vec2(0.5, -0.5), 0.25)) - 0.05;
+  float m4 = S(.008, .0, s4);
+  return m1 + m2 + m3 + m4;
+}
+
+float twoCircles( vec2 uv) {
+  float s1 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.25)) - 0.05;
+  float m1 = S(.008, .0, s1);
+  float s2 = abs(sdCircle( uv - vec2(-0.5, -0.5), 0.75)) - 0.05;
+  float m2 = S(.008, .0, s2);
+  return m1 + m2;
+}
+float teeCircles( vec2 uv) {
+  float s1 = abs(sdCircle( uv - vec2(-0.5, 0.5), 0.25)) - 0.05;
+  float m1 = S(.008, .0, s1);
+  float s2 = abs(sdCircle( uv - vec2(0.5, 0.5), 0.25)) - 0.05;
+  float m2 = S(.008, .0, s2);
+  float s3 = sdBox( uv - vec2(0.0, -0.25), vec2(0.5, 0.05));
+  float m3 = S(0.008, 0.0, s3);
+  return m1 + m2 + m3;
+}
+
 // // Choose shape
 vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
   vec3 col = vec3(0.0);
@@ -387,53 +428,71 @@ vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
     float sl = straightLines(uv);
     col += (1. - sl) * col1 + sl * col2;
   }
+  // u turn
 else if (shapechoice == 2.0) {
     float ut = uTurn(uv);
     col += (1. - ut) * col1 + ut * col2;
   }
-  else if (shapechoice == 3.0) {
-    float scc = smallCornerCircles( uv );
-     col += (1. - scc) * col1 + scc * col2;
+  // Two u turns
+ else if (shapechoice == 3.0) {
+    float uts = uTurns(uv);
+    col += (1. - uts) * col1 + uts * col2;
+  }
+  // One corner circle
+  else if (shapechoice == 4.0) {
+    float cc = cornerCircle( uv );
+     col += (1. - cc) * col1 + cc * col2;
+  }
+  // Two corner circles
+  else if (shapechoice == 5.0) {
+    float cc2 = twoCornerCircles( uv );
+     col += (1. - cc2) * col1 + cc2 * col2;
+  }
+  // Three corner circles
+  else if (shapechoice == 6.0) {
+    float cc2 = threeCornerCircles( uv );
+     col += (1. - cc2) * col1 + cc2 * col2;
+  }
+  // Four corner circles
+   else if (shapechoice == 7.0) {
+    float cc4 = fourCornerCircles( uv );
+    col += (1. - cc4) * col1 + cc4 * col2;
   }
   // Two concentric circles
-  else if (shapechoice == 4.0) {
+  else if (shapechoice == 8.0) {
     float tc = twoCircles( uv );
-     col += (1. - tc) * col1 + tc * col2;
+    col += (1. - tc) * col1 + tc * col2;
   }
- else if (shapechoice == 5.0) {
-     // one corner circle
-    float sc = sdSmallCircle( uv  );
-     col += (1. - sc) * col1 + sc * col2;
+  // Straight line with two corner circles 
+ else if (shapechoice == 9.0) {
+    float tc = teeCircles( uv  );
+    col += (1. - tc) * col1 + tc * col2;
  }
- else if (shapechoice == 6.0) {
-     // Two corner circles
-    float bc = sdBigCircle(uv );
-    col += (1. - bc) * col1 + bc * col2;
-  }
-else if (shapechoice == 7.0) {
-     // Two corner circles
-    float bc2 = sdBigCircles(uv );
-    col += (1. - bc2) * col1 + bc2 * col2;
-  }
+//  else if (shapechoice == 10.0) {
+//      // Two corner circles
+//     float bc = sdBigCircle(uv );
+//     col += (1. - bc) * col1 + bc * col2;
+//   }
+// else if (shapechoice == 111.0) {
+//      // Two corner circles
+//     float bc2 = sdBigCircles(uv );
+//     col += (1. - bc2) * col1 + bc2 * col2;
+//   }
   
- // Kink
-else if (shapechoice == 13.0) {
-    float k1 = sdKink1(uv);
-    col += (1. - k1) * col1 + k1 * col2;
-  }
+ 
 
-else if (shapechoice == 15.0) {
-    float sbc = sdSmallCorner(uv);
-    col += (1. - sbc) * col1 + sbc * col2;
-  }
-else if (shapechoice == 16.0) {
-    float lc = sdLargeCorner(uv);
-    col += (1. - lc) * col1 + lc * col2;
-  }
-else if (shapechoice == 17.0) {
-    float scs = sdSmallCorners(uv);
-    col += (1. - scs) * col1 + scs * col2;
-  }
+// else if (shapechoice == 15.0) {
+//     float sbc = sdSmallCorner(uv);
+//     col += (1. - sbc) * col1 + sbc * col2;
+//   }
+// else if (shapechoice == 16.0) {
+//     float lc = sdLargeCorner(uv);
+//     col += (1. - lc) * col1 + lc * col2;
+//   }
+// else if (shapechoice == 17.0) {
+//     float scs = sdSmallCorners(uv);
+//     col += (1. - scs) * col1 + scs * col2;
+  
  
   // two different size circles
   else if (shapechoice == 19.0) {
@@ -461,7 +520,7 @@ void main()
  //col += cs;
   //   vec3 bkcol = chooseColor( bkcolor ); 
   //   vec3 shapecol = chooseColor( shapecolor );
-    col += chooseShape( 2.0, uv, LTGREY, TEAL );
+    col += chooseShape( 9.0, uv, LTGREY, TEAL );
    
     // col += (1. - m) * LTGREY + m * TEAL;
   gl_FragColor = vec4(col,1.0);

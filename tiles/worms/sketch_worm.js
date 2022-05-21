@@ -12,7 +12,7 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
     let radio2;
     let radio3;
     let radio4;
-    let trainShader;
+    let wormShader;
     let button0;
     let button1;
     let button2;
@@ -26,7 +26,7 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
   
     tg.preload = () => {
         // load the the shader
-        trainShader = tg.loadShader('train_track_generator/train.vert', 'train_track_generator/train.frag');
+        wormShader = tg.loadShader('worms/worms.vert', 'worms/worms.frag');
     }
   
   
@@ -241,9 +241,9 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
     let graphics;
   
     wfc.preload = () => {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 7; i++) {
   
-            const path = "tunnels/tunnel_tiles";
+            const path = "worms/worm_tiles";
             tileImages[i] = wfc.loadImage(`${path}/${i}.png`);
         }
     }
@@ -255,14 +255,16 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
             // } else {
                 // Load and code the tiles
                 tiles[0] = new Tile(tileImages[0], ["AA", "AA", "AA", "AA"]);
-                tiles[1] = new Tile(tileImages[1], ["AA", "AA", "BB", "BB"]);
-                tiles[2] = new Tile(tileImages[2], ["AA", "AA", "AA", "BB"]);
+                tiles[1] = new Tile(tileImages[1], ["AB", "BA", "AB", "BA"]);
+                tiles[2] = new Tile(tileImages[2], ["AA", "AA", "BB", "BB"]);
                 tiles[3] = new Tile(tileImages[3], ["AA", "BB", "AA", "BB"]);
-                tiles[4] = new Tile(tileImages[3], ["AB", "BA", "AB", "BA"]);
+                tiles[4] = new Tile(tileImages[4], ["AA", "AA", "AA", "BB"]);
+                tiles[5] = new Tile(tileImages[5], ["AA", "BB", "AA", "BB"]);
+                tiles[6] = new Tile(tileImages[6], ["BB", "BB", "AA", "BB"]);
             //}
   
   
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 7; i++) {
                 for (let j = 1; j < 4; j++) {
                     tiles.push(tiles[i].rotate(j));
                 }
