@@ -711,7 +711,7 @@ float straightLines( vec2 uv ) {
   return m1 + m2;
 }
 
-// // Choose shape
+ // Choose shape
 vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
   vec3 col = vec3(0.0);
 //   // vec3 bkcol = chooseColor( col1 ); 

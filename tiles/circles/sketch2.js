@@ -9,13 +9,13 @@ let circleShader;
 
 preload = () => {
     // load the the shader
-    circleShader = loadShader('circles/basic.vert', 'circles/basic.frag');
+    circleShader = loadShader('circles/basic.vert', 'circles/circle.frag');
 }
 
 setup = () => {
     pixelDensity(1);
     // shaders require WEBGL mode to work
-    createCanvas(200, 200, WEBGL);
+    createCanvas(400, 400, WEBGL);
     noStroke();
 }
 
