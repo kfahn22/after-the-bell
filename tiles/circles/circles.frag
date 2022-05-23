@@ -1,4 +1,4 @@
-// Frag shader creates tiles for wave function collapse
+// Frag shader creates swirl tiles for wave function collapse
 
 #ifdef GL_ES
 precision mediump float;
@@ -205,6 +205,18 @@ float halfCircle( vec2 uv) {
   return m1;
 } 
 
+float smallHalfCircle( vec2 uv) {
+  float s1 = sdCircle( uv - vec2(0.5, 0.25), 0.25);
+  float m1 = S(0.008, 0.0, s1);
+  return m1;
+} 
+
+float smallerHalfCircle( vec2 uv) {
+  float s1 = sdCircle( uv - vec2(0.5, 0.375), 0.125);
+  float m1 = S(0.008, 0.0, s1);
+  return m1;
+} 
+
 float slice( vec2 uv) {
   float s1 = sdCircle( uv - vec2(0.5, 1.5), 1.25);
   float m1 = S(0.008, 0.0, s1);
@@ -224,6 +236,23 @@ float offsetCircle( vec2 uv) {
   return  m1;
 } 
 
+float centerSwirl( vec2 uv) {
+  float s1 = sdCircle( Rot(PI*0./13.25)*uv - vec2(0.5, 0.), 0.5);
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = sdCircle( Rot(-PI*1./6.)*uv - vec2(0.0, 0.5), 0.5);
+  float m2 = S(0.008, 0.0, s2);
+  float mm = m2 - min(m1,m2);
+  return m1 - min(m1,m2);
+} 
+
+float centerSwirl2( vec2 uv) {
+  float s1 = sdCircle( Rot(PI*0./13.25)*uv - vec2(0.5, 0.), 0.5);
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = sdCircle( Rot(-PI*1./3.)*uv - vec2(0.0, 0.5), 0.5);
+  float m2 = S(0.008, 0.0, s2);
+  float mm = m2 - min(m1,m2);
+  return m1 - min(m1,m2);
+} 
 float swirl( vec2 uv) {
   float s1 = sdCircle( uv - vec2(0.5, 0.5), 1.0);
   float m1 = S(0.008, 0.0, s1);
@@ -244,6 +273,62 @@ float swirl3( vec2 uv) {
   float s1 = sdCircle( uv - vec2(0.5, 1.0), 1.25);
   float m1 = S(0.008, 0.0, s1);
   return 1. - m1;
+  //return m1;
+} 
+
+float swirl4( vec2 uv) {
+  float s1 = sdCircle( uv - vec2(0.5, 0.5), 1.0);
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = sdCircle( Rot(PI*1./7.5)*uv - vec2(0.775, 0.775), 1.025);
+  float m2 = S(0.008, 0.0, s2);
+  return m1 - m2;
+} 
+
+float swirl5( vec2 uv ) {
+  float s1 = sdCircle( Rot(PI*1./128.)*uv - vec2(0.475, 0.75), .75);
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = sdCircle( Rot(PI*1./7.)*uv - vec2(0.525, 0.535), .525);
+  float m2 = S(0.008, 0.0, s2);
+  return 1. - (m1 - m2);
+} 
+
+float doubleSwirl( vec2 uv ) {
+  float s1 = sdCircle( Rot(PI*1./128.)*uv - vec2(0.475, 0.75), .75);
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = sdCircle( Rot(PI*1./7.)*uv - vec2(0.525, 0.535), .525);
+  float m2 = S(0.008, 0.0, s2);
+  float s3 = sdCircle( Rot(PI*1./128.)*uv - vec2(-0.475, -0.75), .75);
+  float m3 = S(0.008, 0.0, s3);
+  float s4 = sdCircle( Rot(PI*1./7.)*uv - vec2(-0.525, -0.535), .525);
+  float m4 = S(0.008, 0.0, s4);
+  return 1. - (m1 - m2) - (m3 - m4);
+} 
+
+float anotherSwirl( vec2 uv ) {
+  float s1 = sdCircle( Rot(PI*0./128.)*uv - vec2(-0.5, 0.5), .25);
+  float m1 = S(0.008, 0.0, s1);
+  float mm = 1. - m1;
+  float s2 = sdCircle( Rot(PI*1./20.)*uv - vec2(-0.15, .405), .475);
+  float m2 = S(0.008, 0.0, s2);
+  // float s3 = sdCircle( Rot(PI*1./128.)*uv - vec2(-0.475, -0.75), .75);
+  // float m3 = S(0.008, 0.0, s3);
+  // float s4 = sdCircle( Rot(PI*1./7.)*uv - vec2(-0.525, -0.535), .525);
+  // float m4 = S(0.008, 0.0, s4);
+  return m2 - m1;// (m3 - m4);
+} 
+
+float curve( vec2 uv ) {
+  float s1 = sdCircle( Rot(PI*0./128.)*uv - vec2(0.475, -0.75), .75);
+  float m1 = S(0.008, 0.0, s1);
+  return m1;
+}
+
+float curve2( vec2 uv) {
+  float s1 = sdCircle( uv - vec2(0.5, 0.5), 1.0);
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = sdCircle( Rot(PI*0./7.5)*uv - vec2(0.45, 0.45), 0.45);
+  float m2 = S(0.008, 0.0, s2);
+  return m1 - m2;
 } 
 
 float centerBox( vec2 uv ) {
@@ -305,13 +390,35 @@ float junction( vec2 uv) {
 
 // 'lens'
   float lens( vec2 uv) {
-    float s = sdCircle(uv - vec2(.33, .0), .75);
+    float s = sdCircle(uv - vec2(0.33, 0.0), 0.75);
     float m = S(.008, 0., s);
     return m;
    }
-   
 
+ // rainbow on edge
+ float rainbow( vec2 uv) {
+   float s1 = sdCircle(uv - vec2(0.0, -0.5), 0.5);
+   float m1 = S(.008, 0., s1);
+   float s2 = sdCircle(uv - vec2(0.0, -0.5), 0.25);
+   float m2 = S(.008, 0., s2);
+   return m1 - m2;
+   }
    
+   // half circle on edge
+ float btHalfCircle( vec2 uv) {
+    float s = sdCircle(uv - vec2(0.0, -0.5), 0.25);
+    float m = S(.008, 0., s);
+    return m;
+   }
+   // two half circle on outer edge
+ float twoHalfCircles( vec2 uv) {
+    float s1 = sdCircle(uv - vec2(-0.375, -0.5), 0.125);
+    float m1 = S(.008, 0., s1);
+    float s2 = sdCircle(uv - vec2(0.375, -.5), .125);
+    float m2 = S(.008, 0., s2);
+    return m1 + m2;
+   }
+
 // Choose shape
 vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
   vec3 col = vec3(0.0);
@@ -355,57 +462,118 @@ else if (shapechoice == 6.0) {
     float qc = halfCircle(uv );
     col += (1. - qc) * col1 + qc * col2;
   }
-  else if (shapechoice == 8.0) {
+  // Center swirl bigger
+   else if (shapechoice == 9.0) {
+    float cts = centerSwirl( uv );
+    col += (1. - cts) * col1 + cts * col2;
+  }
+  // Center swirl skinnier
+   else if (shapechoice == 10.0) {
+    float cts2 = centerSwirl2( uv );
+    col += (1. - cts2) * col1 + cts2 * col2;
+  }
+  else if (shapechoice == 11.0) {
     float s = swirl( uv );
     col += (1. - s) * col1 + s * col2;
   }
- else if (shapechoice == 9.0) {
+ 
+ else if (shapechoice == 12.0) {
     float sw = swirl2( uv );
     col += (1. - sw) * col1 + sw * col2;
   }
-  else if (shapechoice == 10.0) {
+  
+  else if (shapechoice == 13.0) {
     float sw3 = swirl3( uv );
     col += (1. - sw3) * col1 + sw3 * col2;
   }
- else if (shapechoice == 11.0) {
+  else if (shapechoice == 14.0) {
+    float ms = swirl4( uv );
+    col += (1. - ms) * col1 + ms * col2;
+  }
+ else if (shapechoice == 15.0) { 
+    float sw5 = swirl5( uv );
+    col += (1. - sw5) * col1 + sw5 * col2;
+  }
+ else if (shapechoice == 16.0) {
     float cm = column( uv );
     col += (1. - cm) * col1 + cm * col2;
   }
-  else if (shapechoice == 12.0) {
+  else if (shapechoice == 17.0) {
     float j = junction( uv );
     col += (1. - j) * col1 + j * col2;
   }
-  else if (shapechoice == 13.0) {
+  else if (shapechoice == 18.0) {
     float l = lens( uv );
     col += (1. - l) * col1 + l * col2;
   }
-  else if (shapechoice == 14.0) {
+  else if (shapechoice == 19.0) {
     float cr = cross( uv );
     col += (1. - cr) * col1 + cr * col2;
   }
-  else if (shapechoice == 15.0) {
+  else if (shapechoice == 20.0) {
     float cb = centerBox( uv );
     col += (1. - cb) * col1 + cb * col2;
   }
-  else if (shapechoice == 16.0) {
+  else if (shapechoice == 21.0) {
     float sl = slice( uv );
     col += (1. - sl) * col1 + sl * col2;
   }
-  else if (shapechoice == 17.0) {
+  else if (shapechoice == 22.0) {
     float sls = slices( uv );
     col += (1. - sls) * col1 + sls * col2;
   }
-   else if (shapechoice == 18.0) {
+   else if (shapechoice == 23.0) {
     float oc = offsetCircle( uv );
     col += (1. - oc) * col1 + oc * col2;
   }
-  else if (shapechoice == 19.0) {
+  else if (shapechoice == 24.0) {
     float hb = halfBox( uv );
     col += (1. - hb) * col1 + hb * col2;
   }
-  else if (shapechoice == 20.0) {
+  else if (shapechoice == 25.0) {
     float qb = quarterBox( uv );
     col += (1. - qb) * col1 + qb * col2;
+  }
+  else if (shapechoice == 26.0) {
+    float sw4 = swirl4( uv );
+    col += (1. - sw4) * col1 + sw4 * col2;
+  }
+  else if (shapechoice == 27.0) {
+    float cv = curve( uv );
+    col += (1. - cv) * col1 + cv * col2;
+  }
+  else if (shapechoice == 28.0) {
+    float cv2 = curve2( uv );
+    col += (1. - cv2) * col1 + cv2 * col2;
+  }
+  
+  else if (shapechoice == 29.0) {
+    float shc = smallHalfCircle( uv );
+    col += (1. - shc) * col1 + shc * col2;
+  }
+   else if (shapechoice == 30.0) {
+    float shc2 = smallerHalfCircle( uv );
+    col += (1. - shc2) * col1 + shc2 * col2;
+  }
+   else if (shapechoice == 31.0) {
+    float ds = doubleSwirl( uv );
+    col += (1. - ds) * col1 + ds * col2;
+  }
+  else if (shapechoice == 33.0) {
+    float as = anotherSwirl( uv );
+    col += (1. - as) * col1 + as * col2;
+  }
+  else if (shapechoice == 34.0) {
+    float bhc = btHalfCircle( uv );
+    col += (1. - bhc) * col1 + bhc * col2;
+  }
+  else if (shapechoice == 35.0) {
+    float thc = twoHalfCircles( uv );
+    col += (1. - thc) * col1 + thc * col2;
+  }
+   else if (shapechoice == 36.0) {
+    float rb = rainbow( uv );
+    col += (1. - rb) * col1 + rb * col2;
   }
  return col;
 }
@@ -417,9 +585,9 @@ void main()
     vec3 col = vec3(0);
   
    vec3 cs = checkSymmetry( uv);
-  //col += cs;
+   //col += cs;
  
-  col += chooseShape( 19.0, uv, GREY, GREEN);
+  col += chooseShape( 36.0, uv, GREY, GREEN);
   // col += chooseShape( 0.0, uv, GREEN, GREY);
   //col = m * MAUVE +  PURPLE;
  // col = (1. - m) * MAUVE + m * PURPLE;

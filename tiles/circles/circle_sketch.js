@@ -258,13 +258,7 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
                 tiles[3] = new Tile(tileImages[3], ["DB", "CA", "AA", "AA"]);
                 tiles[4] = new Tile(tileImages[4], ["DB", "CA", "DB", "CA"]);
                 tiles[5] = new Tile(tileImages[5], ["BB", "BC", "AA", "AD"]);
-                tiles[6] = new Tile(tileImages[6], ["AA", "AD", "BB", "BC"]);
-                tiles[7] = new Tile(tileImages[7], ["CA", "DB", "CA", "DB"]);
-                tiles[8] = new Tile(tileImages[8], ["AA", "AB", "BB", "BB"]);
-                tiles[9] = new Tile(tileImages[9], ["AD", "BB", "CA", "AA"]);
-                tiles[10] = new Tile(tileImages[10], ["BC", "AA", "DB", "BB"]);
-                tiles[11] = new Tile(tileImages[11], ["CA", "DB", "BB", "BB"]);
-                tiles[12] = new Tile(tileImages[12], ["BB", "BC", "AA", "AD"]);
+               
                
             //}
   

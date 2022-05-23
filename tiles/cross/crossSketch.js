@@ -239,9 +239,9 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
     let graphics;
   
     wfc.preload = () => {
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 5; i++) {
   
-            const path = "circles/swirls";
+            const path = "cross";
             tileImages[i] = wfc.loadImage(`${path}/${i}.png`);
         }
     }
@@ -253,18 +253,16 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
             // } else {
                 // Load and code the tiles
                 tiles[0] = new Tile(tileImages[0], ["AAAA", "AAAA", "AAAA", "AAAA"]);
-                tiles[1] = new Tile(tileImages[1], ["BAAA", "AABB", "AAAA", "AAAA"]);
-                tiles[2] = new Tile(tileImages[2], ["BAAA", "AAAB", "AAAA", "AAAA"]);
-                tiles[3] = new Tile(tileImages[3], ["AAAA", "AAAB", "AAAA", "AAAA"]);
-                tiles[4] = new Tile(tileImages[4], ["AAAA", "ABAA", "AAAA", "AAAA"]);
-                tiles[5] = new Tile(tileImages[5], ["AAAA", "ABAA", "AAAA", "ABAA"]);
-                tiles[6] = new Tile(tileImages[6], ["AAAA", "BAAA", "AAAA", "AAAA"]);
-                tiles[7] = new Tile(tileImages[7], ["AAAA", "ABAA", "AAAA", "AAAA"]);
+                tiles[1] = new Tile(tileImages[1], ["AAAA", "AAAA", "BAAB", "AAAA"]);
+                tiles[2] = new Tile(tileImages[2], ["AAAA", "AAAA", "ABBA", "AAAA"]);
+                tiles[3] = new Tile(tileImages[3], ["BAAB", "BAAB", "BAAB", "BAAB"]);
+                tiles[4] = new Tile(tileImages[4], ["ABBA", "AAAA", "ABBA", "AAAA"]);
+               
                
             //}
   
   
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < 5; i++) {
                 for (let j = 1; j < 4; j++) {
                     tiles.push(tiles[i].rotate(j));
                 }

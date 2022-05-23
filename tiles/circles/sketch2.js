@@ -9,7 +9,7 @@ let circleShader;
 
 preload = () => {
     // load the the shader
-    circleShader = loadShader('circles/basic.vert', 'circles/circle.frag');
+    circleShader = loadShader('circles/basic.vert', 'circles/circles.frag');
 }
 
 setup = () => {
