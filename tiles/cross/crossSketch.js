@@ -215,9 +215,9 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
     tg.saveTile7 = () => {
         tg.storeItem("img7", tg.canvas.elt.toDataURL());
     }
-    // tg.mousePressed = () => {
-    //   saveFrames('uv', 'png', 1, 1);
-    // }
+    tg.mousePressed = () => {
+      saveFrames('/Users/kathrynfahnline/after-the-bell/tiles/cross/crossTiles/uv.png', 1, 1);
+    }
   
   });
   
@@ -241,7 +241,7 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
     wfc.preload = () => {
         for (let i = 0; i < 5; i++) {
   
-            const path = "cross";
+            const path = "cross/crossTiles";
             tileImages[i] = wfc.loadImage(`${path}/${i}.png`);
         }
     }
@@ -252,13 +252,13 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
        
             // } else {
                 // Load and code the tiles
-                tiles[0] = new Tile(tileImages[0], ["AAAA", "AAAA", "AAAA", "AAAA"]);
-                tiles[1] = new Tile(tileImages[1], ["AAAA", "AAAA", "BAAB", "AAAA"]);
-                tiles[2] = new Tile(tileImages[2], ["AAAA", "AAAA", "ABBA", "AAAA"]);
-                tiles[3] = new Tile(tileImages[3], ["BAAB", "BAAB", "BAAB", "BAAB"]);
-                tiles[4] = new Tile(tileImages[4], ["ABBA", "AAAA", "ABBA", "AAAA"]);
-               
-               
+                // tiles[0] = new Tile(tileImages[0], ["AAAA", "AAAA", "AAAA", "AAAA"]);
+                // tiles[1] = new Tile(tileImages[1], ["AAAA", "AAAA", "BAAB", "AAAA"]);
+                tiles[0] = new Tile(tileImages[0], ["AAAA", "AAAA", "ABBA", "AAAA"]);
+                tiles[1] = new Tile(tileImages[1], ["BAAB", "BAAB", "BAAB", "BAAB"]);
+                tiles[2] = new Tile(tileImages[2], ["BAAB", "BBBB", "BAAB", "BBBB"]);
+                tiles[3] = new Tile(tileImages[3], ["AAAA", "BAAB", "AAAA", "BAAB"]); 
+                tiles[4] = new Tile(tileImages[4], ["AAAA", "BBBB", "AAAA", "BBBB"]);
             //}
   
   

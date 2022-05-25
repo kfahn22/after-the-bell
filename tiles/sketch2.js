@@ -117,9 +117,9 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
     tg.saveTile4 = () => {
         tg.storeItem("img3", fourthBuffer.elt.toDataURL());
     }
-    // tg.mousePressed = () => {
-    //   saveFrames('uv', 'png', 1, 1);
-    // }
+    tg.mousePressed = () => {
+      saveCanvas(`circle_tiles/c.png`);
+    }
 
 
 });

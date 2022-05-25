@@ -15,7 +15,7 @@ preload = () => {
 setup = () => {
     pixelDensity(1);
     // shaders require WEBGL mode to work
-    createCanvas(400, 400, WEBGL);
+    c = createCanvas(400, 400, WEBGL);
     noStroke();
 }
 
@@ -26,6 +26,6 @@ draw = () => {
     rect(0, 0, width, height);
 
 }
-// function mousePressed() {
-//     saveFrames('uv', 'png', 1, 1);
-//     }
+function mousePressed() {
+    saveCanvas(c, '/Users/kathrynfahnline/after-the-bell/tiles/cross/crossTiles/uv.', 'png');
+    }
