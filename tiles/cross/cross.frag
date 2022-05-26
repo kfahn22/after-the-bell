@@ -6,15 +6,23 @@ precision mediump float;
 
 // Pass in uniforms from the sketch.js file
 uniform vec2 u_resolution; 
-uniform float iTime;
-uniform vec2 iMouse;
-uniform float iFrame;
-//uniform sampler2D tex0;
+uniform float colorAr;
+uniform float colorAg;
+uniform float colorAb;
+uniform float colorBr;
+uniform float colorBg;
+uniform float colorBb;
+uniform float tileChoice;
 
 #define S smoothstep
 #define CG colorGradient
 #define PI 3.14159
 
+// Define choosen colors
+#define colA vec3(colorAr, colorAg, colorAb)/255.
+#define colB vec3(colorBr, colorBg, colorBb)/255.
+
+// Grid Colors
 #define RED vec3(255,0,0)/255.
 #define YELLOW vec3(255,255,0)/255.
 
@@ -22,6 +30,8 @@ uniform float iFrame;
 #define GREY vec3(89,89,89)/255.
 #define BLUE vec3(30,46,222)/255.
 #define PURPLE vec3(63,46,86)/255.
+
+// Coding Train Colo=rs
 #define MAUVE vec3(187,182,223)/255.
 #define LTPURPLE vec3(198,200,238)/255.
 #define RASPBERRY vec3(222,13,146)/255.
@@ -197,39 +207,80 @@ float junction( vec2 uv) {
     float m2 = S(.008, 0., s2);
     return m1 + m2;
    }
+float columnCircles( vec2 uv) {
+    float s1 = sdCircle(uv - vec2(-0.25, -0.5), 0.2475);
+    float m1 = S(.008, 0., s1);
+    float s2 = sdCircle(uv - vec2(0.25, -0.5), .2475);
+    float m2 = S(.008, 0., s2);
+    float s3 = sdCircle(uv - vec2(-0.25, 0.5), 0.2475);
+    float m3 = S(.008, 0., s3);
+    float s4 = sdCircle(uv - vec2(0.25, 0.5), .2475);
+    float m4 = S(.008, 0., s4);
+    float mm = m1 + m2 + m3 + m4;
+    float m5 = column( uv );
+    return mm + m5 - min(mm, m5);
+   }
+
+float columnCircles2( vec2 uv) {
+    float s1 = sdCircle(uv - vec2(-0.25, -0.5), 0.2475);
+    float m1 = S(.008, 0., s1);
+    float s2 = sdCircle(uv - vec2(0.25, -0.5), .2475);
+    float m2 = S(.008, 0., s2);
+    float s3 = sdCircle(uv - vec2(-0.25, 0.5), 0.2475);
+    float m3 = S(.008, 0., s3);
+    float s4 = sdCircle(uv - vec2(0.25, 0.5), .2475);
+    float m4 = S(.008, 0., s4);
+    float mm = m1 + m2 + m3 + m4;
+    float m5 = column( Rot(PI*2./4.)*uv );
+    return mm + m5 - min(mm, m5);
+   }
+
+ float diagonal( vec2 uv) {
+    float s1 = sdCircle(Rot(PI*2./4.)*uv - vec2(-0.5, -0.5), 0.25);
+    float m1 = S(.008, 0., s1);
+    float s2 = sdCircle(Rot(PI*2./4.)*uv - vec2(-0.5, -0.5), 0.75);
+    float m2 = S(.008, 0., s2);
+    float mm1 = m2 - m1;
+    float s3 = sdCircle(Rot(PI*2./4.)*uv - vec2(0.5, 0.5), 0.75);
+    float m3 = S(.008, 0., s3);
+    float s4 = sdCircle(Rot(PI*2./4.)*uv - vec2(0.5, 0.5), .25);
+    float m4 = S(.008, 0., s4);
+    float s5 = sdCircle(uv - vec2(0.0, 0.0), 0.25);
+    float m5 = S(.008, 0., s5);
+    float mm2 = m3 - m4;
+    return 1. - max(mm1, mm2) + m5;
+   }
 
 // Choose shape
 vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
-  vec3 col = vec3(0.0);
-//   // vec3 bkcol = chooseColor( col1 ); 
-//   // vec3 shapecol = chooseColor( col2 );
-       
-   if (shapechoice == 0.0) {
-     col = col1;
-   }
- else if (shapechoice == 1.0) {
-    float cm = column( uv );
-    col += (1. - cm) * col1 + cm * col2;
+    vec3 col = vec3(0);
+ if (shapechoice == 0.0) {
+    float rb = rainbow( uv );
+    col += (1. - rb) * col1 + rb * col2;
   }
-  else if (shapechoice == 2.0) {
-    float j = junction( uv );
-    col += (1. - j) * col1 + j * col2;
-  }
-  else if (shapechoice == 3.0) {
+   else if (shapechoice == 1.0) {
     float cr = cross( uv );
     col += (1. - cr) * col1 + cr * col2;
   }
-  else if (shapechoice == 4.0) {
-    float bhc = btHalfCircle( uv );
-    col += (1. - bhc) * col1 + bhc * col2;
-  }
-  else if (shapechoice == 5.0) {
-    float thc = twoHalfCircles( uv );
+   else if (shapechoice == 2.0) {
+    float thc = columnCircles2( uv );
     col += (1. - thc) * col1 + thc * col2;
   }
-   else if (shapechoice == 6.0) {
-    float rb = rainbow( uv );
-    col += (1. - rb) * col1 + rb * col2;
+  else if (shapechoice == 3.0) {
+    float cc = columnCircles( uv );
+    col += (1. - cc) * col1 + cc * col2;
+  }
+  else if (shapechoice == 4.0) {
+    float d = diagonal( uv );
+    col += (1. - d) * col1 + d * col2;
+  }
+  else if (shapechoice == 5.0) {
+    float cm = column( uv );
+    col += (1. - cm) * col1 + cm * col2;
+  }
+  else if (shapechoice == 6.0) {
+    float bhc = btHalfCircle( uv );
+    col += (1. - bhc) * col1 + bhc * col2;
   }
  return col;
 }
@@ -243,8 +294,7 @@ void main()
    vec3 cs = checkSymmetry( uv);
    //col += cs;
  
-  col += chooseShape( 36.0, uv, GREY, GREEN);
-  // col += chooseShape( 0.0, uv, GREEN, GREY);
- 
+  col += chooseShape(tileChoice, uv, colA, colB);
+  
     gl_FragColor = vec4(col,1.0);
 }

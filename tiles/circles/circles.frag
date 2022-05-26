@@ -9,7 +9,7 @@ uniform vec2 u_resolution;
 uniform float iTime;
 uniform vec2 iMouse;
 uniform float iFrame;
-//uniform sampler2D tex0;
+uniform float 
 
 #define S smoothstep
 #define CG colorGradient

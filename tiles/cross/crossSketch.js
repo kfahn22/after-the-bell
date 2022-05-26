@@ -1,291 +1,679 @@
 // These sketches generate tiles and then runs the wave function collapse algorithm.
-// The code is based on the Wave Function Collapse challenge by Dan Shiffman and 
-// Local Storage by Dan Shiffman
-// The tile generation code uses shaders and is my own but incorporates SDF functions // from Inigo Quilez
-// Attempt to add track choice efficiently
+// The wfc algorithm code is based on the Wave Function Collapse challenge by Dan Shiffman
+// https://www.youtube.com/watch?v=QvoTSl60Y88
+// The idea for storing the tiles in local storage is based on the th Local Storage tutorial by Dan Shiffman
+// https://www.youtube.com/watch?v=_SRS8b4LcZ8
 
-new p5(tg => { // This sketch generates train track tiles that can be used with the wave function collapse algorithm
-    // Colors can be personalized by changing the color values in the frag files
-  
+new p5(sa => {
+
     // a shader variable
-    let radio1;
-    let radio2;
-    let radio3;
-    let radio4;
-    let circleShader;
-    let button0;
-    let button1;
-    let button2;
-    let button3;
-    let button4;
-    let button5;
-    let button6;
-    let button7;
-  
-    let canvas;
-  
-    tg.preload = () => {
-        // load the the shader
-        circleShader = tg.loadShader('circles/circles.vert', 'circles/circles.frag');
-    }
-  
-  
-    tg.setup = () => {
-        tg.pixelDensity(1);
-        // shaders require WEBGL mode to work
-        // tg.canvas = tg.createCanvas(100, 100, tg.WEBGL);
-        tg.createP('Choose your tile and colors');
-        let div0 = tg.createDiv();
-        div0.class('grid-container');
-        div0.position(20, 450);
-  
-        canvas = tg.createCanvas(100, 100, tg.WEBGL);
-        canvas.parent(div0);
-        canvas.style('padding', '1vw');
-        // Can't save to local storage with out this line
-        tg.canvas = tg.createGraphics(100, 100, tg.WEBGL);
-  
-        tg.noStroke();
-        div5 = tg.createDiv();
-        button0 = tg.createButton('Save blank');
-  
-        //div5.parent('div0');
-        //div5.class('buttons');
-        button0.parent(div5);
-        div5.style('display', "flex");
-        div5.style('padding', '2vw');
-        //div5.position(20, 480);
-        div5.style('justify-content', 'space-around');
-        button0.mousePressed(tg.saveTile0);
-        button1 = tg.createButton('Save cross');
-        button1.parent(div5);
-        button1.mousePressed(tg.saveTile1);
-        button2 = tg.createButton('Save curved');
-        button2.parent(div5);
-        button2.mousePressed(tg.saveTile2);
-        button3 = tg.createButton('Save junction');
-        button3.parent(div5);
-        button3.mousePressed(tg.saveTile3);
-        div6 = tg.createDiv();
-        //div6.position(20, 540);
-        div6.style('display', "flex");
-        div6.style('justify-content', 'space-around');
-        button4 = tg.createButton('Save quarter');
-        button4.parent(div6);
-        button4.mousePressed(tg.saveTile4);
-        button5 = tg.createButton('Save side');
-        button5.parent(div6);
-        button5.mousePressed(tg.saveTile5);
-        button6 = tg.createButton('Save straight');
-        button6.parent(div6);
-        button6.mousePressed(tg.saveTile6);
-        button7 = tg.createButton('Save small');
-        button7.parent(div6);
-        button7.mousePressed(tg.saveTile7);
-  
-        let div1 = tg.createDiv();
-        div1.style('font-size', '14px');
-        div1.position(20, 575);
-        rad1label = tg.createP('Track Choice');
-        rad1label.parent(div1);
-        radio1 = tg.createRadio();
-        radio1.parent(div1);
-        radio1.class('choice');
-        radio1.style('width', '75px');
-        radio1.option('0.0', 'blank<br>');
-        radio1.option('1.0', 'cross<br>');
-        radio1.option('2.0', 'curved<br>');
-        radio1.option('3.0', 'junction<br>');
-        radio1.option('4.0', 'quarter<br>');
-        radio1.option('5.0', 'side<br>');
-        radio1.option('6.0', 'straight<br>');
-        radio1.option('7.0', 'small<br>');
-        radio1.selected('0.0', 'blank');
-        radio1.attribute('name', 'div1');
-  
-        let div2 = tg.createDiv();
-        div2.style('font-size', '14px');
-        div2.position(160, 575);
-        rad4label = tg.createP('Background');
-        rad4label.parent(div2);
-        radio4 = tg.createRadio();
-        radio4.style('width', '75px');
-        radio4.parent(div2);
-        radio4.option('0.0', 'white<br>');
-        radio4.option('1.0', 'black<br>');
-        radio4.option('2.0', 'grey<br>');
-        radio4.option('3.0', 'red<br>');
-        radio4.option('4.0', 'orange<br>');
-        radio4.option('5.0', 'yellow<br>');
-        radio4.option('6.0', 'green<br>');
-        radio4.option('7.0', 'blue<br>');
-        radio4.option('8.0', 'violet<br>');
-        radio4.selected('2.0', 'grey<br>');
-        radio4.attribute('name', 'div2');
-  
-        let div3 = tg.createDiv();
-        div3.style('font-size', '14px');
-        div3.position(260, 575);
-        rad2label = tg.createP('Rail color');
-        rad2label.parent(div3);
-        radio2 = tg.createRadio();
-        radio2.parent(div3);
-        radio2.style('width', '75px');
-        radio2.option('0.0', 'white<br>');
-        radio2.option('1.0', 'black<br>');
-        radio2.option('2.0', 'grey<br>');
-        radio2.option('3.0', 'red<br>');
-        radio2.option('4.0', 'orange<br>');
-        radio2.option('5.0', 'yellow<br>');
-        radio2.option('6.0', 'green<br>');
-        radio2.option('7.0', 'blue<br>');
-        radio2.option('8.0', 'violet<br>');
-        radio2.selected('0.0', 'white<br>');
-        radio2.attribute('name', 'div3');
-  
-        let div4 = tg.createDiv();
-        div4.style('font-size', '14px');
-        div4.position(360, 575);
-        rad3label = tg.createP('Track color');
-        rad3label.parent(div4);
-        radio3 = tg.createRadio();
-        radio3.parent(div4);
-        radio3.style('width', '75px');
-        radio3.option('0.0', 'white<br>');
-        radio3.option('1.0', 'black<br>');
-        radio3.option('2.0', 'grey<br>');
-        radio3.option('3.0', 'red<br>');
-        radio3.option('4.0', 'orange<br>');
-        radio3.option('5.0', 'yellow<br>');
-        radio3.option('6.0', 'green<br>');
-        radio3.option('7.0', 'blue<br>');
-        radio3.option('8.0', 'violet<br>');
-        radio3.selected('0.0', 'white<br>');
-        radio3.attribute('name', 'div4');
-  
-    }
-  
-    tg.draw = () => {
-        tg.background(0);
-        let track = radio1.value();
-        let col1 = radio4.value();
-        let col2 = radio2.value();
-        let col3 = radio3.value();
-  
-        // Choose a shader
-        //let name = tg.getItem('fname');
-  
-        circleShader.setUniform('u_resolution', [tg.width, tg.height]);
-        circleShader.setUniform('bkcolor', col1);
-       
-        tg.shader(circleShader);
-  
-  
-        // rect gives us some geometry on the screen
-        tg.rect(0, 0, tg.width, tg.height);
-  
-    }
-  
-  
-    // tg.buttton = () => {
-    //     tg.storeItem("canvas", tg.canvas.elt.toDataURL());
-    // }
-  
-    tg.saveTile0 = () => {
-        tg.storeItem("img0", tg.canvas.elt.toDataURL());
-    }
-    tg.saveTile1 = () => {
-        tg.storeItem("img1", tg.canvas.elt.toDataURL());
-    }
-    tg.saveTile2 = () => {
-        tg.storeItem("img2", tg.canvas.elt.toDataURL());
-    }
-    tg.saveTile3 = () => {
-        tg.storeItem("img3", tg.canvas.elt.toDataURL());
-    }
-    tg.saveTile4 = () => {
-        tg.storeItem("img4", tg.canvas.elt.toDataURL());
-    }
-    tg.saveTile5 = () => {
-        tg.storeItem("img5", tg.canvas.elt.toDataURL());
-    }
-    tg.saveTile6 = () => {
-        tg.storeItem("img6", tg.canvas.elt.toDataURL());
-    }
-    tg.saveTile7 = () => {
-        tg.storeItem("img7", tg.canvas.elt.toDataURL());
-    }
-    tg.mousePressed = () => {
-      saveFrames('/Users/kathrynfahnline/after-the-bell/tiles/cross/crossTiles/uv.png', 1, 1);
-    }
-  
-  });
-  
+    let shader0;
 
-  
-  new p5(wfc => {
+    // Declare variables
+    let radio1;
+
+    let button0;
+    let c0;
+    let graphics0;
+
+    sa.preload = () => {
+        // load the the shader
+        shader0 = sa.loadShader('circles/basic.vert', 'cross/cross.frag');
+    }
+
+    sa.setup = () => {
+        sa.pixelDensity(1);
+        sa.noStroke();
+
+        let divA = sa.createDiv();
+        divA.position(20, 600);
+        divA.style('max-width', '100px');
+        divA.style('align-content', 'center');
+
+        c0 = sa.createCanvas(100, 100, sa.WEBGL);
+        c0.parent(divA);
+        sa.pixelDensity(1);
+        // shaders require WEBGL mode to work
+        graphics0 = sa.createGraphics(100, 100, sa.WEBGL);
+
+        button0 = sa.createButton('SAVE TILE A');
+        button0.parent(divA);
+        button0.mousePressed(sa.saveTile0);
+
+        r1Slider = sa.createSlider(0, 255, 98);
+        g1Slider = sa.createSlider(0, 255, 98);
+        b1Slider = sa.createSlider(0, 255, 98);
+        r2Slider = sa.createSlider(0, 255, 83);
+        g2Slider = sa.createSlider(0, 255, 255);
+        b2Slider = sa.createSlider(0, 255, 69);
+
+        let colors = sa.getItem("colors");
+        if (colors !== null) {
+            r1Slider.value(colors.r1);
+            g1Slider.value(colors.g1);
+            b1Slider.value(colors.b1);
+            r2Slider.value(colors.r2);
+            g2Slider.value(colors.g2);
+            b2Slider.value(colors.b2);
+        }
+        r1Slider.changed(sa.storeColors);
+        g1Slider.changed(sa.storeColors);
+        b1Slider.changed(sa.storeColors);
+        r2Slider.changed(sa.storeColors);
+        g2Slider.changed(sa.storeColors);
+        b2Slider.changed(sa.storeColors);
+
+        // Organize the layout
+        let div1 = sa.createDiv();
+        div1.style('font-size', '16px');
+        div1.position(10, 425);
+        colAlabel = sa.createP('Color A');
+        colAlabel.parent(div1);
+        colAlabel.style("color", "#555555");
+        r1Slider.parent(div1);
+        g1Slider.parent(div1);
+        b1Slider.parent(div1);   
+         
+        let div2 = sa.createDiv();
+        div2.style('font-size', '16px');
+        div2.position(10, 500);
+        colBlabel = sa.createP('Color B');
+        colBlabel.parent(div2);
+        colBlabel.style("color", "#555555");
+        r2Slider.parent(div2);
+        g2Slider.parent(div2);
+        b2Slider.parent(div2);         
+    }
+
+    sa.draw = () => {
+        let r1 = r1Slider.value();
+        let g1 = g1Slider.value();
+        let b1 = b1Slider.value();
+        let r2 = r2Slider.value();
+        let g2 = g2Slider.value();
+        let b2 = b2Slider.value();
+        shader0.setUniform('u_resolution', [sa.width, sa.height]);
+        shader0.setUniform('colorAr', r1);
+        shader0.setUniform('colorAg', g1);
+        shader0.setUniform('colorAb', b1);
+        shader0.setUniform('colorBr', r2);
+        shader0.setUniform('colorBg', g2);
+        shader0.setUniform('colorBb', b2);
+        shader0.setUniform('tileChoice', 0.0);
+        sa.shader(shader0);
+        sa.rect(0, 0, sa.width, sa.height);
+    }
+
+    sa.storeColors = () => {
+        let colors = {
+            r1: r1Slider.value(),
+            g1: g1Slider.value(),
+            b1: b1Slider.value(),
+            r2: r2Slider.value(),
+            g2: g2Slider.value(),
+            b2: b2Slider.value(),
+        }
+
+        sa.storeItem("colors", colors);
+    }
+
+    sa.saveTile0 = () => {
+        sa.storeItem("img0", c0.elt.toDataURL());
+    }
+
+});
+
+new p5(sb => {
+    // a shader variable
+    let shader1;
+    let button1;
+    let c2;
+    let graphics2;
+
+    sb.preload = () => {
+        // load the the shader
+        shader1 = sb.loadShader('circles/basic.vert', 'cross/cross.frag');
+    }
+
+    sb.setup = () => {
+        sb.pixelDensity(1);
+        sb.noStroke();
+        // shaders require WEBGL mode to work
+
+        let divB = sb.createDiv();
+        divB.position(125, 600);
+        divB.style('max-width', '100px');
+        c1 = sb.createCanvas(100, 100, sb.WEBGL);
+        c1.parent(divB);
+        sb.pixelDensity(1);
+        graphics2 = sb.createGraphics(100, 100, sb.WEBGL);
+
+        button1 = sb.createButton('SAVE TILE B');
+        button1.mousePressed(sb.saveTile1);
+        button1.parent(divB);
+
+        let colors = sb.getItem("colors");
+        if (colors !== null) {
+            r1Slider.value(colors.r1);
+            g1Slider.value(colors.g1);
+            b1Slider.value(colors.b1);
+            r2Slider.value(colors.r2);
+            g2Slider.value(colors.g2);
+            b2Slider.value(colors.b2);
+        }  
+    }
+
+    sb.draw = () => {
+        let r1 = r1Slider.value();
+        let g1 = g1Slider.value();
+        let b1 = b1Slider.value();
+        let r2 = r2Slider.value();
+        let g2 = g2Slider.value();
+        let b2 = b2Slider.value();  
+        shader1.setUniform('u_resolution', [sb.width, sb.height]);
+        shader1.setUniform('colorAr', r1);
+        shader1.setUniform('colorAg', g1);
+        shader1.setUniform('colorAb', b1);
+        shader1.setUniform('colorBr', r2);
+        shader1.setUniform('colorBg', g2);
+        shader1.setUniform('colorBb', b2);
+        shader1.setUniform('tileChoice', 1.0);
+        sb.shader(shader1);
+        sb.rect(0, 0, sb.width, sb.height)
+    }
+ 
+    sb.saveTile1 = () => {
+        sb.storeItem("img1", c1.elt.toDataURL());
+    }
+});
+
+
+
+new p5(sc => {
+    // a shader variable
+    let shader2;
+    let button2;
+    let c2;
+    let graphics3;
+
+    sc.preload = () => {
+        // load the the shader
+        shader2 = sc.loadShader('circles/basic.vert', 'cross/cross.frag');
+    }
+
+    sc.setup = () => {
+        sc.pixelDensity(1);
+        sc.noStroke();
+        // shaders require WEBGL mode to work
+
+        let divC = sc.createDiv();
+        divC.position(230, 600);
+        divC.style('max-width', '100px');
+        c2 = sc.createCanvas(100, 100, sc.WEBGL);
+        c2.parent(divC);
+        sc.pixelDensity(1);
+        graphics3 = sc.createGraphics(100, 100, sc.WEBGL);
+
+        button2 = sc.createButton('SAVE TILE C');
+        button2.mousePressed(sc.saveTile2);
+        button2.parent(divC);
+
+        let colors = sc.getItem("colors");
+        if (colors !== null) {
+            r1Slider.value(colors.r1);
+            g1Slider.value(colors.g1);
+            b1Slider.value(colors.b1);
+            r2Slider.value(colors.r2);
+            g2Slider.value(colors.g2);
+            b2Slider.value(colors.b2);
+        }
+        
+    }
+
+    sc.draw = () => {
+        let r1 = r1Slider.value();
+        let g1 = g1Slider.value();
+        let b1 = b1Slider.value();
+        let r2 = r2Slider.value();
+        let g2 = g2Slider.value();
+        let b2 = b2Slider.value();
+        shader2.setUniform('u_resolution', [sc.width, sc.height]);
+        shader2.setUniform('colorAr', r1);
+        shader2.setUniform('colorAg', g1);
+        shader2.setUniform('colorAb', b1);
+        shader2.setUniform('colorBr', r2);
+        shader2.setUniform('colorBg', g2);
+        shader2.setUniform('colorBb', b2);
+        shader2.setUniform('tileChoice', 2.0);
+        sc.shader(shader2);
+        sc.rect(0, 0, sc.width, sc.height)
+    }
+ 
+    sc.saveTile2 = () => {
+        sc.storeItem("img2", c2.elt.toDataURL());
+    }
+});
+
+
+
+new p5(sd => {
+    // a shader variable
+    let shader3;
+    let button3;
+    let c3;
+    let graphics3;
+
+    sd.preload = () => {
+        // load the the shader
+        shader3 = sd.loadShader('circles/basic.vert', 'cross/cross.frag');
+    }
+
+    sd.setup = () => {
+        sd.pixelDensity(1);
+        sd.noStroke();
+        // shaders require WEBGL mode to work
+
+        let divD = sd.createDiv();
+        divD.position(335, 600);
+        divD.style('max-width', '100px');
+        c3 = sd.createCanvas(100, 100, sd.WEBGL);
+        c3.parent(divD);
+        sd.pixelDensity(1);
+        graphics3 = sd.createGraphics(100, 100, sd.WEBGL);
+
+        button3 = sd.createButton('SAVE TILE D');
+        button3.mousePressed(sd.saveTile3);
+        button3.parent(divD);
+
+        let colors = sd.getItem("colors");
+        if (colors !== null) {
+            r1Slider.value(colors.r1);
+            g1Slider.value(colors.g1);
+            b1Slider.value(colors.b1);
+            r2Slider.value(colors.r2);
+            g2Slider.value(colors.g2);
+            b2Slider.value(colors.b2);
+        }
+        
+    }
+
+    sd.draw = () => {
+        let r1 = r1Slider.value();
+        let g1 = g1Slider.value();
+        let b1 = b1Slider.value();
+        let r2 = r2Slider.value();
+        let g2 = g2Slider.value();
+        let b2 = b2Slider.value();
+        shader3.setUniform('u_resolution', [sd.width, sd.height]);
+        shader3.setUniform('colorAr', r1);
+        shader3.setUniform('colorAg', g1);
+        shader3.setUniform('colorAb', b1);
+        shader3.setUniform('colorBr', r2);
+        shader3.setUniform('colorBg', g2);
+        shader3.setUniform('colorBb', b2);
+        shader3.setUniform('tileChoice', 3.0);
+        sd.shader(shader3);
+        sd.rect(0, 0, sd.width, sd.height)
+    }
+ 
+    sd.saveTile3 = () => {
+        sd.storeItem("img3", c3.elt.toDataURL());
+    }
+});
+
+
+new p5(se => {
+    // a shader variable
+    let shader4;
+    let button4;
+    let c4;
+    let graphics4;
+
+    se.preload = () => {
+        // load the the shader
+        shader4 = se.loadShader('circles/basic.vert', 'cross/cross.frag');
+    }
+
+    se.setup = () => {
+        se.pixelDensity(1);
+        se.noStroke();
+        // shaders require WEBGL mode to work
+
+        let divE = se.createDiv();
+        divE.position(20, 750);
+        divE.style('max-width', '100px');
+        c4 = se.createCanvas(100, 100, se.WEBGL);
+        c4.parent(divE);
+        se.pixelDensity(1);
+        graphics4 = se.createGraphics(100, 100, se.WEBGL);
+
+        button4 = se.createButton('SAVE TILE E');
+        button4.mousePressed(se.saveTile4);
+        button4.parent(divE);
+
+        let colors = se.getItem("colors");
+        if (colors !== null) {
+            r1Slider.value(colors.r1);
+            g1Slider.value(colors.g1);
+            b1Slider.value(colors.b1);
+            r2Slider.value(colors.r2);
+            g2Slider.value(colors.g2);
+            b2Slider.value(colors.b2);
+        }
+        
+    }
+
+    se.draw = () => {
+        let r1 = r1Slider.value();
+        let g1 = g1Slider.value();
+        let b1 = b1Slider.value();
+        let r2 = r2Slider.value();
+        let g2 = g2Slider.value();
+        let b2 = b2Slider.value();
+        shader4.setUniform('u_resolution', [se.width, se.height]);
+        shader4.setUniform('colorAr', r1);
+        shader4.setUniform('colorAg', g1);
+        shader4.setUniform('colorAb', b1);
+        shader4.setUniform('colorBr', r2);
+        shader4.setUniform('colorBg', g2);
+        shader4.setUniform('colorBb', b2);
+        shader4.setUniform('tileChoice', 4.0);
+        se.shader(shader4);
+        se.rect(0, 0, se.width, se.height)
+    }
+ 
+    se.saveTile4 = () => {
+        se.storeItem("img4", c4.elt.toDataURL());
+    }
+});
+
+
+new p5(sf => {
+    // a shader variable
+    let shader5;
+    let button5;
+    let c5;
+    let graphics5;
+
+    sf.preload = () => {
+        // load the the shader
+        shader5 = sf.loadShader('circles/basic.vert', 'cross/cross.frag');
+    }
+
+    sf.setup = () => {
+        sf.pixelDensity(1);
+        sf.noStroke();
+        // shaders require WEBGL mode to work
+
+        let divF = sf.createDiv();
+        divF.position(125, 750);
+        divF.style('max-width', '100px');
+        c5 = sf.createCanvas(100, 100, sf.WEBGL);
+        c5.parent(divF);
+        sf.pixelDensity(1);
+        graphics5 = sf.createGraphics(100, 100, sf.WEBGL);
+
+        button5 = sf.createButton('SAVE TILE F');
+        button5.mousePressed(sf.saveTile5);
+        button5.parent(divF);
+
+        let colors = sf.getItem("colors");
+        if (colors !== null) {
+            r1Slider.value(colors.r1);
+            g1Slider.value(colors.g1);
+            b1Slider.value(colors.b1);
+            r2Slider.value(colors.r2);
+            g2Slider.value(colors.g2);
+            b2Slider.value(colors.b2);
+        }
+        
+    }
+
+    sf.draw = () => {
+        let r1 = r1Slider.value();
+        let g1 = g1Slider.value();
+        let b1 = b1Slider.value();
+        let r2 = r2Slider.value();
+        let g2 = g2Slider.value();
+        let b2 = b2Slider.value();
+        shader5.setUniform('u_resolution', [sf.width, sf.height]);
+        shader5.setUniform('colorAr', r1);
+        shader5.setUniform('colorAg', g1);
+        shader5.setUniform('colorAb', b1);
+        shader5.setUniform('colorBr', r2);
+        shader5.setUniform('colorBg', g2);
+        shader5.setUniform('colorBb', b2);
+        shader5.setUniform('tileChoice', 5.0);
+        sf.shader(shader5);
+        sf.rect(0, 0, sf.width, sf.height)
+    }
+ 
+    sf.saveTile5 = () => {
+        sf.storeItem("img5", c5.elt.toDataURL());
+    }
+});
+
+new p5(sg => {
+    // a shader variable
+    let shader6;
+    let button6;
+    let c6;
+    let graphics6
+
+    sg.preload = () => {
+        // load the the shader
+        shader6 = sg.loadShader('circles/basic.vert', 'cross/cross.frag');
+    }
+
+    sg.setup = () => {
+        sg.pixelDensity(1);
+        sg.noStroke();
+        // shaders require WEBGL mode to work
+
+        let divG = sg.createDiv();
+        divG.position(230, 750);
+        divG.style('max-width', '100px');
+        c6 = sg.createCanvas(100, 100, sg.WEBGL);
+        c6.parent(divG);
+        sg.pixelDensity(1);
+        graphics6 = sg.createGraphics(100, 100, sg.WEBGL);
+
+        button6 = sg.createButton('SAVE TILE G');
+        button6.mousePressed(sg.saveTile6);
+        button6.parent(divG);
+
+        let colors = sg.getItem("colors");
+        if (colors !== null) {
+            r1Slider.value(colors.r1);
+            g1Slider.value(colors.g1);
+            b1Slider.value(colors.b1);
+            r2Slider.value(colors.r2);
+            g2Slider.value(colors.g2);
+            b2Slider.value(colors.b2);
+        }
+        
+    }
+
+    sg.draw = () => {
+        let r1 = r1Slider.value();
+        let g1 = g1Slider.value();
+        let b1 = b1Slider.value();
+        let r2 = r2Slider.value();
+        let g2 = g2Slider.value();
+        let b2 = b2Slider.value();
+        shader6.setUniform('u_resolution', [sg.width, sg.height]);
+        shader6.setUniform('colorAr', r1);
+        shader6.setUniform('colorAg', g1);
+        shader6.setUniform('colorAb', b1);
+        shader6.setUniform('colorBr', r2);
+        shader6.setUniform('colorBg', g2);
+        shader6.setUniform('colorBb', b2);
+        shader6.setUniform('tileChoice', 6.0);
+        sg.shader(shader6);
+        sg.rect(0, 0, sg.width, sg.height)
+    }
+ 
+    sg.saveTile6 = () => {
+        sg.storeItem("img6", c6.elt.toDataURL());
+    }
+});
+
+
+// new p5(sh => {
+//     // a shader variable
+//     let shader7;
+//     let button7;
+//     let c7;
+//     let graphics7
+
+//     sh.preload = () => {
+//         // load the the shader
+//         shader7 = sh.loadShader('circles/basic.vert', 'cross/cross.frag');
+//     }
+
+//     sh.setup = () => {
+//         sh.pixelDensity(1);
+//         sh.noStroke();
+//         // shaders require WEBGL mode to work
+
+//         let divH = sh.createDiv();
+//         divH.position(335, 750);
+//         divH.style('max-width', '100px');
+//         c7 = sh.createCanvas(100, 100, sh.WEBGL);
+//         c7.parent(divH);
+//         sh.pixelDensity(1);
+//         graphics7 = sh.createGraphics(100, 100, sh.WEBGL);
+
+//         button7 = sh.createButton('SAVE TILE H');
+//         button7.mousePressed(sh.saveTile7);
+//         button7.parent(divH);
+
+//         let colors = sh.getItem("colors");
+//         if (colors !== null) {
+//             r1Slider.value(colors.r1);
+//             g1Slider.value(colors.g1);
+//             b1Slider.value(colors.b1);
+//             r2Slider.value(colors.r2);
+//             g2Slider.value(colors.g2);
+//             b2Slider.value(colors.b2);
+//         }
+        
+//     }
+
+//     sh.draw = () => {
+//         let r1 = r1Slider.value();
+//         let g1 = g1Slider.value();
+//         let b1 = b1Slider.value();
+//         let r2 = r2Slider.value();
+//         let g2 = g2Slider.value();
+//         let b2 = b2Slider.value();
+//         shader7.setUniform('u_resolution', [sh.width, sh.height]);
+//         shader7.setUniform('colorAr', r1);
+//         shader7.setUniform('colorAg', g1);
+//         shader7.setUniform('colorAb', b1);
+//         shader7.setUniform('colorBr', r2);
+//         shader7.setUniform('colorBg', g2);
+//         shader7.setUniform('colorBb', b2);
+//         shader7.setUniform('tileChoice', 7.0);
+//         sh.shader(shader7);
+//         sh.rect(0, 0, sh.width, sh.height)
+//     }
+ 
+//     sh.saveTile7 = () => {
+//         sh.storeItem("img7", c7.elt.toDataURL());
+//     }
+// });
+
+
+
+new p5(wfc => {
     //let g;
-  
+
     // Code for inputing new tiles
     let w = 100;
     let h = 100;
-  
+
+    let imgData = [];
     const tiles = [];
     const tileImages = [];
-  
+
     let grid = [];
-  
+
     const DIM = 10;
     let graphics;
-  
+
     wfc.preload = () => {
         for (let i = 0; i < 5; i++) {
-  
-            const path = "cross/crossTiles";
-            tileImages[i] = wfc.loadImage(`${path}/${i}.png`);
+            imgData[i] = wfc.getItem(`img${i}`);
+            if (imgData[i] !== null) {
+                tileImages[i] = wfc.loadImage(imgData[i]);
+            } else {
+                const path = "cross/crossTiles";
+                tileImages[i] = wfc.loadImage(`${path}/${i}.png`);
+
+            }
+
         }
     }
-  
+
+    wfc.clear = () => {
+        wfc.clearStorage();
+    }
+
     wfc.setup = () => {
-        wfc.createCanvas(300, 300);
+        canvasDiv = wfc.createDiv();
+        canvasDiv.position(10, 10);
+
+        let para0 = wfc.createP('WFC with Local Storage');
+        para0.style("font-size", "24px");
+        para0.style("color", "#555555");
+        para0.parent(canvasDiv);
+
+        canvas = wfc.createCanvas(300, 300);
+        canvas.parent(canvasDiv);
+        let para1 = wfc.createP('Choose colors by moving r, g, b sliders');
+        para1.style("font-size", "20px");
+        para1.style("color", "#555555");
+        para1.position(10, 390);
+        let para2 = wfc.createP('Press refresh to rerun the WFC algorithm or clear the color choices.<br> Press clear storage to reset the tiles.');
+        para2.style("font-size", "20px");
+        para2.style("color", "#555555");
+        para2.position(350, 50);
+        button = wfc.createButton('CLEAR STORAGE');
+        button.position(350, 300);
+        button.mousePressed(wfc.clear);
+
+        // Load and code the tiles
+        tiles[0] = new Tile(tileImages[0], ["AAAA", "AAAA", "BAAB", "AAAA"]);
+        tiles[1] = new Tile(tileImages[1], ["BAAB", "BAAB", "BAAB", "BAAB"]);
+        tiles[2] = new Tile(tileImages[2], ["AAAA", "BAAB", "AAAA", "BAAB"]);
+        tiles[3] = new Tile(tileImages[3], ["AAAA", "BBBB", "AAAA", "BBBB"]);
+        tiles[4] = new Tile(tileImages[4], ["BAAB", "BAAB", "BAAB", "BAAB"]);
        
-       
-            // } else {
-                // Load and code the tiles
-                // tiles[0] = new Tile(tileImages[0], ["AAAA", "AAAA", "AAAA", "AAAA"]);
-                // tiles[1] = new Tile(tileImages[1], ["AAAA", "AAAA", "BAAB", "AAAA"]);
-                tiles[0] = new Tile(tileImages[0], ["AAAA", "AAAA", "ABBA", "AAAA"]);
-                tiles[1] = new Tile(tileImages[1], ["BAAB", "BAAB", "BAAB", "BAAB"]);
-                tiles[2] = new Tile(tileImages[2], ["BAAB", "BBBB", "BAAB", "BBBB"]);
-                tiles[3] = new Tile(tileImages[3], ["AAAA", "BAAB", "AAAA", "BAAB"]); 
-                tiles[4] = new Tile(tileImages[4], ["AAAA", "BBBB", "AAAA", "BBBB"]);
-            //}
-  
-  
-            for (let i = 0; i < 5; i++) {
-                for (let j = 1; j < 4; j++) {
-                    tiles.push(tiles[i].rotate(j));
-                }
+        for (let i = 0; i < 5; i++) {
+            for (let j = 1; j < 4; j++) {
+                tiles.push(tiles[i].rotate(j));
             }
-  
-            // Generate the adjacency rules based on edges
-            for (let i = 0; i < tiles.length; i++) {
-                const tile = tiles[i];
-                tile.analyze(tiles);
-            }
-  
-            wfc.startOver();
         }
+
+        // Generate the adjacency rules based on edges
+        for (let i = 0; i < tiles.length; i++) {
+            const tile = tiles[i];
+            tile.analyze(tiles);
+        }
+
+        wfc.startOver();
+    }
     //}
-  
+
     wfc.startOver = () => {
         // Create cell for each spot on the grid
         for (let i = 0; i < DIM * DIM; i++) {
             grid[i] = new Cell(tiles.length);
         }
-  
+
     }
-  
+
     wfc.checkValid = (arr, valid) => {
         //console.log(arr, valid);
         for (let i = arr.length - 1; i >= 0; i--) {
@@ -301,14 +689,14 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
         // console.log(arr);
         // console.log("----------");
     }
-  
+
     wfc.mousePressed = () => {
         wfc.redraw();
     }
-  
+
     wfc.draw = () => {
         wfc.background(0);
-  
+
         const w = wfc.width / DIM;
         const h = wfc.height / DIM;
         for (let j = 0; j < DIM; j++) {
@@ -324,20 +712,20 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
                 }
             }
         }
-  
+
         // Pick cell with least entropy
         let gridCopy = grid.slice();
         gridCopy = gridCopy.filter((a) => !a.collapsed);
         // console.table(grid);
         // console.table(gridCopy);
-  
+
         if (gridCopy.length == 0) {
             return;
         }
         gridCopy.sort((a, b) => {
             return a.options.length - b.options.length;
         });
-  
+
         let len = gridCopy[0].options.length;
         let stopIndex = 0;
         for (let i = 1; i < gridCopy.length; i++) {
@@ -346,7 +734,7 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
                 break;
             }
         }
-  
+
         if (stopIndex > 0) gridCopy.splice(stopIndex);
         const cell = wfc.random(gridCopy);
         cell.collapsed = true;
@@ -356,7 +744,7 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
             return;
         }
         cell.options = [pick];
-  
+
         const nextGrid = [];
         for (let j = 0; j < DIM; j++) {
             for (let i = 0; i < DIM; i++) {
@@ -405,26 +793,26 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
                         }
                         wfc.checkValid(options, validOptions);
                     }
-  
+
                     // I could immediately collapse if only one option left?
                     nextGrid[index] = new Cell(options);
                 }
             }
         }
-  
+
         grid = nextGrid;
     }
-  
+
     wfc.reverseString = (s) => {
         let arr = s.split("");
         arr = arr.reverse();
         return arr.join("");
     }
-  
+
     wfc.compareEdge = (a, b) => {
         return a == wfc.reverseString(b);
     }
-  
+
     class Tile {
         constructor(img, edges) {
             this.img = img;
@@ -434,7 +822,7 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
             this.down = [];
             this.left = [];
         }
-  
+
         analyze(tiles) {
             for (let i = 0; i < tiles.length; i++) {
                 let tile = tiles[i];
@@ -456,7 +844,7 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
                 }
             }
         }
-  
+
         rotate(num) {
             const w = this.img.width;
             const h = this.img.height;
@@ -465,7 +853,7 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
             newImg.translate(w / 2, h / 2);
             newImg.rotate(wfc.HALF_PI * num);
             newImg.image(this.img, 0, 0);
-  
+
             const newEdges = [];
             const len = this.edges.length;
             for (let i = 0; i < len; i++) {
@@ -474,7 +862,7 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
             return new Tile(newImg, newEdges);
         }
     }
-  
+
     class Cell {
         constructor(value) {
             this.collapsed = false;
@@ -488,5 +876,5 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
             }
         }
     }
-  
-  });
+
+});
