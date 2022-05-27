@@ -6,16 +6,25 @@ precision mediump float;
 
 // Pass in resolution from the sketch.js file
 uniform vec2 u_resolution; 
-uniform float bkcolor;
-uniform float shapecolor;
-uniform float shapechoice;
+uniform float colorAr;
+uniform float colorAg;
+uniform float colorAb;
+uniform float colorBr;
+uniform float colorBg;
+uniform float colorBb;
+uniform float tileChoice;
 
 #define S smoothstep
 #define CG colorGradient
 #define PI 3.14159
 
+// Colors for grid
 #define RED vec3(255,0,0)/255.
 #define YELLOW vec3(255,255,0)/255.
+
+// Define choosen colors
+#define colA vec3(colorAr, colorAg, colorAb)/255.
+#define colB vec3(colorBr, colorBg, colorBb)/255.
 
 #define GREY vec3(201,206,204)/255.
 #define TEAL1 vec3(18,88,98)/255.
@@ -153,6 +162,7 @@ float smin( in float a, in float b, float k)
  float h = max( k - abs(a-b), 0.0); // "spike" function look at grpahtoy
  return min(a,b) - h*h/(k*4.0);
 }
+
 // Function to choose colors 
 vec3 chooseColor( float choice ) {
     vec3 colchoice;
@@ -418,94 +428,86 @@ float teeCircles( vec2 uv) {
 // // Choose shape
 vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
   vec3 col = vec3(0.0);
-//   // vec3 bkcol = chooseColor( col1 ); 
-//   // vec3 shapecol = chooseColor( col2 );
        
    if (shapechoice == 0.0) {
      col = col1;
    }
+    // Two concentric circles
   else if (shapechoice == 1.0) {
+    float tc = twoCircles( uv );
+    col += (1. - tc) * col1 + tc * col2;
+  }
+  else if (shapechoice == 2.0) {
     float sl = straightLines(uv);
     col += (1. - sl) * col1 + sl * col2;
   }
   // u turn
-else if (shapechoice == 2.0) {
+else if (shapechoice == 3.0) {
     float ut = uTurn(uv);
     col += (1. - ut) * col1 + ut * col2;
   }
   // Two u turns
- else if (shapechoice == 3.0) {
+ else if (shapechoice == 4.0) {
     float uts = uTurns(uv);
     col += (1. - uts) * col1 + uts * col2;
   }
-  // One corner circle
-  else if (shapechoice == 4.0) {
-    float cc = cornerCircle( uv );
-     col += (1. - cc) * col1 + cc * col2;
-  }
-  // Two corner circles
-  else if (shapechoice == 5.0) {
-    float cc2 = twoCornerCircles( uv );
-     col += (1. - cc2) * col1 + cc2 * col2;
-  }
-  // Three corner circles
-  else if (shapechoice == 6.0) {
-    float cc2 = threeCornerCircles( uv );
-     col += (1. - cc2) * col1 + cc2 * col2;
-  }
-  // Four corner circles
-   else if (shapechoice == 7.0) {
-    float cc4 = fourCornerCircles( uv );
-    col += (1. - cc4) * col1 + cc4 * col2;
-  }
-  // Two concentric circles
-  else if (shapechoice == 8.0) {
-    float tc = twoCircles( uv );
-    col += (1. - tc) * col1 + tc * col2;
-  }
-  // Straight line with two corner circles 
- else if (shapechoice == 9.0) {
+    // Straight line with two corner circles 
+ else if (shapechoice == 5.0) {
     float tc = teeCircles( uv  );
     col += (1. - tc) * col1 + tc * col2;
  }
-//  else if (shapechoice == 10.0) {
+  // two different size circles
+  else if (shapechoice == 6.0) {
+    float tc2 = twoCircles2(uv);
+    col += (1. - tc2) * col1 + tc2 * col2;
+  }
+  // One corner circle
+  // else if (shapechoice == 7.0) {
+  //   float cc = cornerCircle( uv );
+  //    col += (1. - cc) * col1 + cc * col2;
+  // }
+  // // Two corner circles
+  // else if (shapechoice == 8.0) {
+  //   float cc2 = twoCornerCircles( uv );
+  //    col += (1. - cc2) * col1 + cc2 * col2;
+  // }
+  // // Three corner circles
+  // else if (shapechoice == 9.0) {
+  //   float cc2 = threeCornerCircles( uv );
+  //    col += (1. - cc2) * col1 + cc2 * col2;
+  // }
+  // // Four corner circles
+  //  else if (shapechoice == 10.0) {
+  //   float cc4 = fourCornerCircles( uv );
+  //   col += (1. - cc4) * col1 + cc4 * col2;
+  // }
+ 
+
+//  else if (shapechoice == 11.0) {
 //      // Two corner circles
 //     float bc = sdBigCircle(uv );
 //     col += (1. - bc) * col1 + bc * col2;
 //   }
-// else if (shapechoice == 111.0) {
+// else if (shapechoice == 12.0) {
 //      // Two corner circles
 //     float bc2 = sdBigCircles(uv );
 //     col += (1. - bc2) * col1 + bc2 * col2;
 //   }
-  
- 
-
-// else if (shapechoice == 15.0) {
+// else if (shapechoice == 13.0) {
 //     float sbc = sdSmallCorner(uv);
 //     col += (1. - sbc) * col1 + sbc * col2;
 //   }
-// else if (shapechoice == 16.0) {
+// else if (shapechoice == 14.0) {
 //     float lc = sdLargeCorner(uv);
 //     col += (1. - lc) * col1 + lc * col2;
 //   }
-// else if (shapechoice == 17.0) {
+// else if (shapechoice == 15.0) {
 //     float scs = sdSmallCorners(uv);
 //     col += (1. - scs) * col1 + scs * col2;
-  
- 
-  // two different size circles
-  else if (shapechoice == 19.0) {
-    float tc2 = twoCircles2(uv);
-    col += (1. - tc2) * col1 + tc2 * col2;
-  }
-  else if (shapechoice == 20.0) {
-    float sqc = twoSquareCorners(uv);
-    col += (1. - sqc) * col1 + sqc * col2;
-  }
- 
- 
-
+  // else if (shapechoice == 16.0) {
+  //   float sqc = twoSquareCorners(uv);
+  //   col += (1. - sqc) * col1 + sqc * col2;
+  // }
  return col;
 }
 
@@ -518,10 +520,8 @@ void main()
   vec3 cs = checkSymmetry( uv );
   
  //col += cs;
-  //   vec3 bkcol = chooseColor( bkcolor ); 
-  //   vec3 shapecol = chooseColor( shapecolor );
-    col += chooseShape( 9.0, uv, LTGREY, TEAL );
+  
+  col += chooseShape( tileChoice, uv, colA, colB );
    
-    // col += (1. - m) * LTGREY + m * TEAL;
   gl_FragColor = vec4(col,1.0);
 }

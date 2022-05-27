@@ -232,7 +232,8 @@ float columnCircles2( vec2 uv) {
     float m4 = S(.008, 0., s4);
     float mm = m1 + m2 + m3 + m4;
     float m5 = column( Rot(PI*2./4.)*uv );
-    return mm + m5 - min(mm, m5);
+    float mm3 = mm + m5 - min(mm, m5);
+    return 1. - mm3;
    }
 
  float diagonal( vec2 uv) {

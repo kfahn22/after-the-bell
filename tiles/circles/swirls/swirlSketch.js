@@ -18,7 +18,7 @@ new p5(sa => {
 
     sa.preload = () => {
         // load the the shader
-        shader0 = sa.loadShader('maze/maze.vert', 'maze/maze.frag');
+        shader0 = sa.loadShader('circles/basic.vert', 'swirls/swirl.frag');
     }
 
     sa.setup = () => {
@@ -132,8 +132,7 @@ new p5(sb => {
 
     sb.preload = () => {
         // load the the shader
-        shader1 = sb.loadShader('maze/maze.vert', 'maze/maze.frag');
-    }
+        shader1 = sb.loadShader('circles/basic.vert', 'swirls/swirl.frag');
 
     sb.setup = () => {
         sb.pixelDensity(1);
@@ -198,7 +197,7 @@ new p5(sc => {
 
     sc.preload = () => {
         // load the the shader
-        shader2 = sc.loadShader('maze/maze.vert', 'maze/maze.frag');
+        shader2 = sc.loadShader('circles/basic.vert', 'swirls/swirl.frag');
     }
 
     sc.setup = () => {
@@ -265,7 +264,7 @@ new p5(sd => {
 
     sd.preload = () => {
         // load the the shader
-        shader3 = sd.loadShader('maze/maze.vert', 'maze/maze.frag');
+        shader3 = sd.loadShader('circles/basic.vert', 'swirls/swirl.frag');
     }
 
     sd.setup = () => {
@@ -331,7 +330,7 @@ new p5(se => {
 
     se.preload = () => {
         // load the the shader
-        shader4 = se.loadShader('maze/maze.vert', 'maze/maze.frag');
+        shader4 = se.loadShader('circles/basic.vert', 'swirls/swirl.frag');
     }
 
     se.setup = () => {
@@ -397,7 +396,7 @@ new p5(sf => {
 
     sf.preload = () => {
         // load the the shader
-        shader5 = sf.loadShader('maze/maze.vert', 'maze/maze.frag');
+        shader5 = sf.loadShader('circles/basic.vert', 'swirls/swirl.frag');
     }
 
     sf.setup = () => {
@@ -462,7 +461,7 @@ new p5(sg => {
 
     sg.preload = () => {
         // load the the shader
-        shader6 = sg.loadShader('maze/maze.vert', 'maze/maze.frag');
+        shader6 = sg.loadShader('circles/basic.vert', 'swirls/swirl.frag');
     }
 
     sg.setup = () => {
@@ -608,7 +607,7 @@ new p5(wfc => {
             if (imgData[i] !== null) {
                 tileImages[i] = wfc.loadImage(imgData[i]);
             } else {
-                const path = "maze/maze_tiles";
+                const path = "swirls/swirl_tiles";
                 tileImages[i] = wfc.loadImage(`${path}/${i}.png`);
 
             }
@@ -645,13 +644,13 @@ new p5(wfc => {
 
         // Load and code the tiles
         tiles[0] = new Tile(tileImages[0], ["AA", "AA", "AA", "AA"]);
-        tiles[1] = new Tile(tileImages[1], ["AA", "BB", "AA", "BB"]);
-        tiles[2] = new Tile(tileImages[2], ["BB", "AA", "AA", "BB"]);
-        tiles[3] = new Tile(tileImages[3], ["AA", "BB", "AA", "AA"]);
+        tiles[1] = new Tile(tileImages[1], ["AA", "AA", "BB", "BB"]);
+        tiles[2] = new Tile(tileImages[2], ["AA", "BB", "AA", "BB"]);
+        tiles[3] = new Tile(tileImages[3], ["AA", "AA", "AA", "BB"]);
         tiles[4] = new Tile(tileImages[4], ["AA", "BB", "AA", "BB"]);
         tiles[5] = new Tile(tileImages[5], ["BB", "BB", "AA", "BB"]);
-        tiles[6] = new Tile(tileImages[6], ["AA", "AB", "AA", "AB"]);
-        for (let i = 0; i < 6; i++) {
+        
+        for (let i = 0; i < 5; i++) {
             for (let j = 1; j < 4; j++) {
                 tiles.push(tiles[i].rotate(j));
             }

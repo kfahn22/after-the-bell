@@ -6,14 +6,23 @@ precision mediump float;
 
 // Pass in resolution from the sketch.js file
 uniform vec2 u_resolution; 
-uniform float bkcolor;
-uniform float shapecolor;
-uniform float shapechoice;
+uniform float colorAr;
+uniform float colorAg;
+uniform float colorAb;
+uniform float colorBr;
+uniform float colorBg;
+uniform float colorBb;
+uniform float tileChoice;
 
 #define S smoothstep
 #define CG colorGradient
 #define PI 3.14159
 
+// Define choosen colors
+#define colA vec3(colorAr, colorAg, colorAb)/255.
+#define colB vec3(colorBr, colorBg, colorBb)/255.
+
+// Colors for grid
 #define RED vec3(255,0,0)/255.
 #define YELLOW vec3(255,255,0)/255.
 
@@ -129,39 +138,6 @@ float smin( in float a, in float b, float k)
  float h = max( k - abs(a-b), 0.0); // "spike" function look at grpahtoy
  return min(a,b) - h*h/(k*4.0);
 }
-// // Function to choose colors 
-// vec3 chooseColor( float choice ) {
-//     vec3 colchoice;
-    
-//     if ( choice == 0.0 )  { //white
-//       colchoice = vec3( 1.0 ); 
-//     } // blank tile
-//     else if ( choice  == 1.0 ) { //black
-//       colchoice = vec3(0.0);
-//           }
-//     else if ( choice  == 2.0 ) { //grey
-//       colchoice = vec3(125,125,125)/255.0;
-//     }
-//     else if ( choice  == 3.0 ) { //red
-//       colchoice = vec3(255, 0, 0)/255.0;
-//     }
-//     else if ( choice  == 4.0 ) { //orange
-//       colchoice = vec3(255,127,0)/255.0;
-//     }
-//     else if ( choice  == 5.0 ) { //yellow
-//       colchoice = vec3(255,255,0)/255.0;
-//     }
-//     else if ( choice  == 6.0 ) { //green
-//       colchoice = vec3(0,255,0)/255.0;
-//     }
-//     else if ( choice  == 7.0 ) { // blue
-//       colchoice = vec3(0,0,255)/255.0;
-//     }
-//     else if ( choice == 8.0 ) { // violet
-//       colchoice = vec3(255,0,255)/255.0;
-//     }
-//   return colchoice;
-// }
 
 // Function to check for symmetry of design
 vec3 checkSymmetry( vec2 uv ) {
@@ -329,11 +305,9 @@ float teeSquares( vec2 uv) {
   return m1  + m2 + m3;
 }
 
-// // Choose shape
+// Choose shape
 vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
   vec3 col = vec3(0.0);
-//   // vec3 bkcol = chooseColor( col1 ); 
-//   // vec3 shapecol = chooseColor( col2 );
        
    if (shapechoice == 0.0) {
      col = col1;
@@ -342,21 +316,19 @@ vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
     float sl = straightLines(uv);
     col += (1. - sl) * col1 + sl * col2;
   }
+   else if (shapechoice == 2.0) {
+    float ts = twoSquares( uv );
+     col += (1. - ts) * col1 + ts * col2;
+   }
   // u turn
-else if (shapechoice == 2.0) {
+else if (shapechoice == 3.0) {
     float ut = uTurn(uv);
     col += (1. - ut) * col1 + ut * col2;
   }
   // U turns
- else if (shapechoice == 3.0) {
+ else if (shapechoice == 4.0) {
     float uts = uTurns(uv);
     col += (1. - uts) * col1 + uts * col2;
-  }
-
-  // Two squares
-  else if (shapechoice == 4.0) {
-    float ts = twoSquares( uv );
-     col += (1. - ts) * col1 + ts * col2;
   }
   // Tee squares
   else if (shapechoice == 5.0) {
@@ -380,9 +352,8 @@ void main()
   vec3 cs = checkSymmetry( uv );
   
  //col += cs;
-  //   vec3 bkcol = chooseColor( bkcolor ); 
-  //   vec3 shapecol = chooseColor( shapecolor );
-    col += chooseShape( 6.0, uv, GREY, GREEN);
+  
+  col += chooseShape( tileChoice, uv, colA, colB);
    
   gl_FragColor = vec4(col,1.0);
 }
