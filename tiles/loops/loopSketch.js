@@ -13,12 +13,13 @@ new p5(sa => {
     let radio1;
 
     let button0;
+    let button1;
     let c0;
     let graphics0;
 
     sa.preload = () => {
         // load the the shader
-        shader0 = sa.loadShader('circles/basic.vert', 'swirls/swirl.frag');
+        shader0 = sa.loadShader('loops/loops.vert', 'loops/loops.frag');
     }
 
     sa.setup = () => {
@@ -39,13 +40,14 @@ new p5(sa => {
         button0 = sa.createButton('SAVE TILE A');
         button0.parent(divA);
         button0.mousePressed(sa.saveTile0);
+        
 
-        r1Slider = sa.createSlider(0, 255, 98);
-        g1Slider = sa.createSlider(0, 255, 98);
-        b1Slider = sa.createSlider(0, 255, 98);
-        r2Slider = sa.createSlider(0, 255, 83);
-        g2Slider = sa.createSlider(0, 255, 255);
-        b2Slider = sa.createSlider(0, 255, 69);
+        r1Slider = sa.createSlider(0, 255, 8);
+        g1Slider = sa.createSlider(0, 255, 61);
+        b1Slider = sa.createSlider(0, 255, 119);
+        r2Slider = sa.createSlider(0, 255, 218);
+        g2Slider = sa.createSlider(0, 255, 65);
+        b2Slider = sa.createSlider(0, 255, 103);
 
         let colors = sa.getItem("colors");
         if (colors !== null) {
@@ -82,7 +84,7 @@ new p5(sa => {
         colBlabel.style("color", "#555555");
         r2Slider.parent(div2);
         g2Slider.parent(div2);
-        b2Slider.parent(div2);         
+        b2Slider.parent(div2); 
     }
 
     sa.draw = () => {
@@ -102,6 +104,8 @@ new p5(sa => {
         shader0.setUniform('tileChoice', 0.0);
         sa.shader(shader0);
         sa.rect(0, 0, sa.width, sa.height);
+        // sa.noLoop();
+        // sa.saveCanvas(c0, 'dogbone/dogbone_tiles/0.png');
     }
 
     sa.storeColors = () => {
@@ -115,6 +119,10 @@ new p5(sa => {
         }
 
         sa.storeItem("colors", colors);
+    }
+
+    sa.saveTile = () => {
+        sa.saveCanvas(c0, '0.png');
     }
 
     sa.saveTile0 = () => {
@@ -132,7 +140,7 @@ new p5(sb => {
 
     sb.preload = () => {
         // load the the shader
-        shader1 = sb.loadShader('circles/basic.vert', 'swirls/swirl.frag');
+        shader1 = sb.loadShader('loops/loops.vert', 'loops/loops.frag');
     }
     
     sb.setup = () => {
@@ -196,7 +204,7 @@ new p5(sc => {
 
     sc.preload = () => {
         // load the the shader
-        shader2 = sc.loadShader('circles/basic.vert', 'swirls/swirl.frag');
+        shader2 = sc.loadShader('loops/loops.vert', 'loops/loops.frag');
     }
 
     sc.setup = () => {
@@ -261,7 +269,7 @@ new p5(sd => {
 
     sd.preload = () => {
         // load the the shader
-        shader3 = sd.loadShader('circles/basic.vert', 'swirls/swirl.frag');
+        shader3 = sd.loadShader('loops/loops.vert', 'loops/loops.frag');
     }
 
     sd.setup = () => {
@@ -327,7 +335,7 @@ new p5(se => {
 
     se.preload = () => {
         // load the the shader
-        shader4 = se.loadShader('circles/basic.vert', 'swirls/swirl.frag');
+        shader4 = se.loadShader('loops/loops.vert', 'loops/loops.frag');
     }
 
     se.setup = () => {
@@ -393,7 +401,7 @@ new p5(sf => {
 
     sf.preload = () => {
         // load the the shader
-        shader5 = sf.loadShader('circles/basic.vert', 'swirls/swirl.frag');
+        shader5 = sf.loadShader('loops/loops.vert', 'loops/loops.frag');
     }
 
     sf.setup = () => {
@@ -458,7 +466,7 @@ new p5(sg => {
 
     sg.preload = () => {
         // load the the shader
-        shader6 = sg.loadShader('circles/basic.vert', 'swirls/swirl.frag');
+        shader6 = sg.loadShader('loops/loops.vert', 'loops/loops.frag');
     }
 
     sg.setup = () => {
@@ -515,70 +523,70 @@ new p5(sg => {
 });
 
 
-// new p5(sh => {
-//     // a shader variable
-//     let shader7;
-//     let button7;
-//     let c7;
-//     let graphics7
+new p5(sh => {
+    // a shader variable
+    let shader7;
+    let button7;
+    let c7;
+    let graphics7
 
-//     sh.preload = () => {
-//         // load the the shader
-//         shader7 = sh.loadShader('circles/basic.vert', 'swirls/swirl.frag');
-//     }
+    sh.preload = () => {
+        // load the the shader
+        shader7 = sh.loadShader('loops/loops.vert', 'loops/loops.frag');
+    }
 
-//     sh.setup = () => {
-//         sh.pixelDensity(1);
-//         sh.noStroke();
-//         // shaders require WEBGL mode to work
+    sh.setup = () => {
+        sh.pixelDensity(1);
+        sh.noStroke();
+        // shaders require WEBGL mode to work
 
-//         let divH = sh.createDiv();
-//         divH.position(335, 750);
-//         divH.style('max-width', '100px');
-//         c7 = sh.createCanvas(100, 100, sh.WEBGL);
-//         c7.parent(divH);
-//         sh.pixelDensity(1);
-//         graphics7 = sh.createGraphics(100, 100, sh.WEBGL);
+        let divH = sh.createDiv();
+        divH.position(335, 750);
+        divH.style('max-width', '100px');
+        c7 = sh.createCanvas(100, 100, sh.WEBGL);
+        c7.parent(divH);
+        sh.pixelDensity(1);
+        graphics7 = sh.createGraphics(100, 100, sh.WEBGL);
 
-//         button7 = sh.createButton('SAVE TILE H');
-//         button7.mousePressed(sh.saveTile7);
-//         button7.parent(divH);
+        button7 = sh.createButton('SAVE TILE H');
+        button7.mousePressed(sh.saveTile7);
+        button7.parent(divH);
 
-//         let colors = sh.getItem("colors");
-//         if (colors !== null) {
-//             r1Slider.value(colors.r1);
-//             g1Slider.value(colors.g1);
-//             b1Slider.value(colors.b1);
-//             r2Slider.value(colors.r2);
-//             g2Slider.value(colors.g2);
-//             b2Slider.value(colors.b2);
-//         }
+        let colors = sh.getItem("colors");
+        if (colors !== null) {
+            r1Slider.value(colors.r1);
+            g1Slider.value(colors.g1);
+            b1Slider.value(colors.b1);
+            r2Slider.value(colors.r2);
+            g2Slider.value(colors.g2);
+            b2Slider.value(colors.b2);
+        }
         
-//     }
+    }
 
-//     sh.draw = () => {
-//         let r1 = r1Slider.value();
-//         let g1 = g1Slider.value();
-//         let b1 = b1Slider.value();
-//         let r2 = r2Slider.value();
-//         let g2 = g2Slider.value();
-//         let b2 = b2Slider.value();
-//         shader7.setUniform('u_resolution', [sh.width, sh.height]);
-//         shader7.setUniform('colorAr', r1);
-//         shader7.setUniform('colorAg', g1);
-//         shader7.setUniform('colorAb', b1);
-//         shader7.setUniform('colorBr', r2);
-//         shader7.setUniform('colorBg', g2);
-//         shader7.setUniform('colorBb', b2);
-//         shader7.setUniform('tileChoice', 7.0);
-//         sh.shader(shader7);
-//         sh.rect(0, 0, sh.width, sh.height)
-//     }
+    sh.draw = () => {
+        let r1 = r1Slider.value();
+        let g1 = g1Slider.value();
+        let b1 = b1Slider.value();
+        let r2 = r2Slider.value();
+        let g2 = g2Slider.value();
+        let b2 = b2Slider.value();
+        shader7.setUniform('u_resolution', [sh.width, sh.height]);
+        shader7.setUniform('colorAr', r1);
+        shader7.setUniform('colorAg', g1);
+        shader7.setUniform('colorAb', b1);
+        shader7.setUniform('colorBr', r2);
+        shader7.setUniform('colorBg', g2);
+        shader7.setUniform('colorBb', b2);
+        shader7.setUniform('tileChoice', 7.0);
+        sh.shader(shader7);
+        sh.rect(0, 0, sh.width, sh.height)
+    }
  
-//     sh.saveTile7 = () => {
-//         sh.storeItem("img7", c7.elt.toDataURL());
-//     }
-// });
+    sh.saveTile7 = () => {
+        sh.storeItem("img7", c7.elt.toDataURL());
+    }
+});
 
 
 
@@ -599,12 +607,12 @@ new p5(wfc => {
     let graphics;
 
     wfc.preload = () => {
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 6; i++) {
             imgData[i] = wfc.getItem(`img${i}`);
             if (imgData[i] !== null) {
                 tileImages[i] = wfc.loadImage(imgData[i]);
             } else {
-                const path = "swirls/swirl_tiles";
+                const path = "loops/loop_tiles";
                 tileImages[i] = wfc.loadImage(`${path}/${i}.png`);
 
             }
@@ -640,12 +648,14 @@ new p5(wfc => {
         button.mousePressed(wfc.clear);
 
         // Load and code the tiles
-        tiles[0] = new Tile(tileImages[0], ["BB", "BA", "AB", "BB"]);
-        tiles[1] = new Tile(tileImages[1], ["AA", "AB", "BA", "AA"]);
-        tiles[2] = new Tile(tileImages[2], ["AB", "BA", "AB", "BA"]);
-        tiles[3] = new Tile(tileImages[3], ["BA", "AB", "BA", "AB"]);
+        tiles[0] = new Tile(tileImages[0], ["AA", "AA", "AA", "AA"]);
+        tiles[1] = new Tile(tileImages[1], ["AB", "BA", "AB", "BA"]);
+        tiles[2] = new Tile(tileImages[2], ["AA", "AB", "BA", "AA"]);
+        tiles[3] = new Tile(tileImages[3], ["AB", "BA", "AB", "BA"]);
+        tiles[4] = new Tile(tileImages[4], ["BB", "BB", "BB", "BB"]);
+        tiles[5] = new Tile(tileImages[5], ["BB", "BB", "BB", "BB"]);
         
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 6; i++) {
             for (let j = 1; j < 4; j++) {
                 tiles.push(tiles[i].rotate(j));
             }

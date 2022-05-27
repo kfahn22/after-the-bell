@@ -210,9 +210,19 @@ float circleCorner( vec2 uv) {
 }
 
 float quarterCircle( vec2 uv) {
-  float s1 = sdCircle( uv - vec2(0.5, 0.5), 0.5);
+ vec2 st = vec2(uv.x, -uv.y);
+  float s1 = sdCircle(Rot(PI*0./4.)*uv- vec2(0.5, -0.5), 0.5);
   float m1 = S(0.008, 0.0, s1);
-  return m1;
+  return 1. - m1;
+}
+
+float quarterCircles( vec2 uv) {
+ vec2 st = vec2(uv.x, -uv.y);
+  float s1 = sdCircle(Rot(PI*0./4.)*uv- vec2(0.5, -0.5), 0.5);
+  float m1 = S(0.008, 0.0, s1);
+   float s2 = sdCircle(Rot(PI*0./4.)*uv- vec2(-0.5, 0.5), 0.5);
+  float m2 = S(0.008, 0.0, s2);
+  return 1. - m1 - m2;
 }
 
 float halfCircle( vec2 uv) {
@@ -252,15 +262,29 @@ float offsetCircle( vec2 uv) {
   return  m1;
 } 
 
-float centerSwirl( vec2 uv) {
-  float s1 = sdCircle( Rot(PI*0./13.25)*uv - vec2(0.5, 0.), 0.5);
-  float m1 = S(0.008, 0.0, s1);
-  float s2 = sdCircle( Rot(-PI*1./6.)*uv - vec2(0.0, 0.5), 0.5);
-  float m2 = S(0.008, 0.0, s2);
-  float mm = m2 - min(m1,m2);
-  return m1 - min(m1,m2);
-} 
+// float centerSwirl( vec2 uv) {
+//   vec2 st = vec2(uv.x, -uv.y);
+//   float s1 = sdCircle( Rot(PI*0./13.25)*st - vec2(0.5, 0.0), 0.5);
+//   float m1 = S(0.008, 0.0, s1);
+//   float s2 = sdCircle( Rot(-PI*1./6.)*st - vec2(0.0, 0.5), 0.5);
+//   float m2 = S(0.008, 0.0, s2);
+//   float mm = m2 - min(m1,m2);
+//   return m1 - min(m1,m2);
+// } 
+float bigArc( vec2 uv) {
+  float s1 = sdCircle( uv - vec2(-0.5, -0.5), 1.0);
+   float m1 = S(0.008, 0.0, s1);
+   return m1;
+}
 
+float quarterDonut( vec2 uv) {
+  float s1 = sdCircle(Rot(PI*0./4.)*uv- vec2(0.5, -0.5), 1.0);
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = sdCircle(Rot(PI*0./4.)*uv- vec2(0.5, -0.5), 0.5);
+  float m2 = S(0.008, 0.0, s2);
+ 
+  return m1 - m2 ;
+} 
 float centerSwirl2( vec2 uv) {
   float s1 = sdCircle( Rot(PI*0./13.25)*uv - vec2(0.5, 0.), 0.5);
   float m1 = S(0.008, 0.0, s1);
@@ -277,6 +301,18 @@ float swirl( vec2 uv) {
   return m1 - m2;
 } 
 
+float swirlCircle( vec2 uv) {
+  vec2 st = vec2(uv.x, -uv.y);
+  float s1 = sdCircle( uv - vec2(-0.5, -0.5), 1.0);
+  float m1 = S(0.008, 0.0, s1);
+  float s2 = sdCircle( Rot(PI*1./7.5)*uv - vec2(-0.775, -0.775), 1.025);
+  float m2 = S(0.008, 0.0, s2);
+  float s3 = sdCircle( uv - vec2(-0.25, -0.5), 0.25);
+  float m3 = S(0.008, 0.0, s3);
+  return m1 - m2 + m3;
+  //return m3;
+}
+
 float swirl2( vec2 uv) {
   float s1 = sdCircle( uv - vec2(0.5, 0.5), 1.0);
   float m1 = S(0.008, 0.0, s1);
@@ -292,14 +328,22 @@ float swirl3( vec2 uv) {
   //return m1;
 } 
 
+// float swirl4( vec2 uv) {
+//   float s1 = sdCircle( uv - vec2(-0.5, -0.5), 1.0);
+//   float m1 = S(0.008, 0.0, s1);
+//   float s2 = sdCircle( Rot(PI*1./7.5)*uv - vec2(-0.775, -0.775), 1.025);
+//   float m2 = S(0.008, 0.0, s2);
+//   return m1 - m2;
+// } 
+
 float swirl4( vec2 uv) {
-  float s1 = sdCircle( uv - vec2(0.5, 0.5), 1.0);
+  vec2 st = vec2(uv.x, -uv.y);
+  float s1 = sdCircle( uv - vec2(-0.5, -0.5), 1.0);
   float m1 = S(0.008, 0.0, s1);
-  float s2 = sdCircle( Rot(PI*1./7.5)*uv - vec2(0.775, 0.775), 1.025);
+  float s2 = sdCircle( Rot(PI*1./7.5)*uv - vec2(-0.775, -0.775), 1.025);
   float m2 = S(0.008, 0.0, s2);
   return m1 - m2;
 } 
-
 float swirl5( vec2 uv ) {
   float s1 = sdCircle( Rot(PI*1./128.)*uv - vec2(0.475, 0.75), .75);
   float m1 = S(0.008, 0.0, s1);
@@ -509,40 +553,46 @@ float columnCircles2( vec2 uv) {
 // Choose shape
 vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
   vec3 col = vec3(0.0);
-//   // vec3 bkcol = chooseColor( col1 ); 
-//   // vec3 shapecol = chooseColor( col2 );
-       
-   if (shapechoice == 0.0) {
-     col = col1;
-   }
+  //    if (shapechoice == 0.0) {
+  //    col = col1;
+  //  }   
+  //   else if (shapechoice == 1.0) {
+  //    col = col2;
+  //  }
   // Center swirl bigger
-   else if (shapechoice == 1.0) {
-    float cts = centerSwirl( uv );
-    col += (1. - cts) * col1 + cts * col2;
+    if (shapechoice == 0.0) {
+    float qc = quarterCircle( uv );
+    col += (1. - qc) * col1 + qc * col2;
   }
-  // Center swirl skinnier
-   else if (shapechoice == 2.0) {
-    float cts2 = centerSwirl2( uv );
-    col += (1. - cts2) * col1 + cts2 * col2;
+  // else if (shapechoice == 3.0) {
+  //   float ms = swirl4( uv );
+  //   col += (1. - ms) * col1 + ms * col2;
+  // }
+  else  if (shapechoice == 1.0) {
+    float s = quarterCircle( uv );
+    col += (1. - s) * col2 + s * col1;
+  }
+//  else if (shapechoice == 4.0) {
+//     float ba = bigArc( uv );
+//     col += (1. - ba) * col1 + ba * col2;
+//   }
+ else if (shapechoice == 2.0) {
+    float qcs = quarterCircles( uv );
+    col += (1. - qcs) * col1 + qcs * col2;
   }
   else if (shapechoice == 3.0) {
-    float s = swirl( uv );
-    col += (1. - s) * col1 + s * col2;
+    float qcs = quarterCircles( uv );
+    col += (1. - qcs) * col2 + qcs * col1;
   }
- 
- else if (shapechoice == 4.0) {
-    float sw = swirl2( uv );
-    col += (1. - sw) * col1 + sw * col2;
-  }
-  
-  else if (shapechoice == 5.0) {
-    float sw3 = swirl3( uv );
-    col += (1. - sw3) * col1 + sw3 * col2;
-  }
-  else if (shapechoice == 6.0) {
-    float ms = swirl4( uv );
-    col += (1. - ms) * col1 + ms * col2;
-  }
+//  else if (shapechoice == 5.0) {
+//     float sw3 = swirl3( uv );
+//     col += (1. - sw3) * col1 + sw3 * col2;
+//   } 
+  // Center swirl skinnier
+  //  else if (shapechoice == 6.0) {
+  //   float cts2 = centerSwirl2( uv );
+  //   col += (1. - cts2) * col1 + cts2 * col2;
+  // }
  else if (shapechoice == 7.0) { 
     float sw5 = swirl5( uv );
     col += (1. - sw5) * col1 + sw5 * col2;
