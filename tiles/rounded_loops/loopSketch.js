@@ -19,7 +19,7 @@ new p5(sa => {
 
     sa.preload = () => {
         // load the the shader
-        shader0 = sa.loadShader('loops/loops.vert', 'loops/loops.frag');
+        shader0 = sa.loadShader('rounded_loops/loops.vert', 'rounded_loops/loops.frag');
     }
 
     sa.setup = () => {
@@ -140,7 +140,7 @@ new p5(sb => {
 
     sb.preload = () => {
         // load the the shader
-        shader1 = sb.loadShader('loops/loops.vert', 'loops/loops.frag');
+        shader1 = sb.loadShader('rounded_loops/loops.vert', 'rounded_loops/loops.frag');
     }
     
     sb.setup = () => {
@@ -204,7 +204,7 @@ new p5(sc => {
 
     sc.preload = () => {
         // load the the shader
-        shader2 = sc.loadShader('loops/loops.vert', 'loops/loops.frag');
+        shader2 = sc.loadShader('rounded_loops/loops.vert', 'rounded_loops/loops.frag');
     }
 
     sc.setup = () => {
@@ -269,7 +269,7 @@ new p5(sd => {
 
     sd.preload = () => {
         // load the the shader
-        shader3 = sd.loadShader('loops/loops.vert', 'loops/loops.frag');
+        shader3 = sd.loadShader('rounded_loops/loops.vert', 'rounded_loops/loops.frag');
     }
 
     sd.setup = () => {
@@ -335,7 +335,7 @@ new p5(se => {
 
     se.preload = () => {
         // load the the shader
-        shader4 = se.loadShader('loops/loops.vert', 'loops/loops.frag');
+        shader4 = se.loadShader('rounded_loops/loops.vert', 'rounded_loops/loops.frag');
     }
 
     se.setup = () => {
@@ -401,7 +401,7 @@ new p5(sf => {
 
     sf.preload = () => {
         // load the the shader
-        shader5 = sf.loadShader('loops/loops.vert', 'loops/loops.frag');
+        shader5 = sf.loadShader('rounded_loops/loops.vert', 'rounded_loops/loops.frag');
     }
 
     sf.setup = () => {
@@ -466,7 +466,7 @@ new p5(sg => {
 
     sg.preload = () => {
         // load the the shader
-        shader6 = sg.loadShader('loops/loops.vert', 'loops/loops.frag');
+        shader6 = sg.loadShader('rounded_loops/loops.vert', 'rounded_loops/loops.frag');
     }
 
     sg.setup = () => {
@@ -532,7 +532,7 @@ new p5(sh => {
 
     sh.preload = () => {
         // load the the shader
-        shader7 = sh.loadShader('loops/loops.vert', 'loops/loops.frag');
+        shader7 = sh.loadShader('rounded_loops/loops.vert', 'rounded_loops/loops.frag');
     }
 
     sh.setup = () => {
@@ -612,7 +612,7 @@ new p5(wfc => {
             if (imgData[i] !== null) {
                 tileImages[i] = wfc.loadImage(imgData[i]);
             } else {
-                const path = "loops/loop_tiles";
+                const path = "rounded_loops/loop_tiles";
                 tileImages[i] = wfc.loadImage(`${path}/${i}.png`);
 
             }

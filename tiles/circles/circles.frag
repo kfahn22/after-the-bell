@@ -6,17 +6,25 @@ precision mediump float;
 
 // Pass in uniforms from the sketch.js file
 uniform vec2 u_resolution; 
-uniform float iTime;
-uniform vec2 iMouse;
-uniform float iFrame;
-uniform float 
+uniform float colorAr;
+uniform float colorAg;
+uniform float colorAb;
+uniform float colorBr;
+uniform float colorBg;
+uniform float colorBb;
+uniform float tileChoice;
 
 #define S smoothstep
 #define CG colorGradient
 #define PI 3.14159
 
-// Grid color
+// Define choosen colors
+#define colA vec3(colorAr, colorAg, colorAb)/255.
+#define colB vec3(colorBr, colorBg, colorBb)/255.
+
+// Grid Colors
 #define RED vec3(255,0,0)/255.
+#define YELLOW vec3(255,255,0)/255.
 
 // Tile colors
 
@@ -24,7 +32,7 @@ uniform float
 #define LAVENDER vec3(163,147,191)/255.
 #define ROSE vec3(244,91,105)/255.
 #define ORANGE vec3(255,82,27)/255.
-#define YELLOW vec3(255,177,0)/255.
+//#define YELLOW vec3(255,177,0)/255.
 #define GREY vec3(89,89,89)/255.
 #define BLUE vec3(30,46,222)/255.
 
@@ -501,184 +509,182 @@ float columnCircles2( vec2 uv) {
 
 // Choose shape
 vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
-  vec3 col = vec3(0.0);
-//   // vec3 bkcol = chooseColor( col1 ); 
-//   // vec3 shapecol = chooseColor( col2 );
-       
-   if (shapechoice == 0.0) {
+  vec3 col = vec3(0.0);     
+  if (shapechoice == 0.0) {
      col = col1;
-   }
+  }
   else if (shapechoice == 1.0) {
-    float hc = smCircleSquare(uv);
-    col += (1. - hc) * col1 + hc * col2;
+    col = col2;
   }
-
-   // Circle Square
+  // Half circle
   else if (shapechoice == 2.0) {
-    float cs = lrCircleSquare( uv );
-     col += (1. - cs) * col1 + cs * col2;
+    float s2 = sdCircle( uv-vec2(0.5, 0.0), 0.5 );
+    float m2 = S(0.008, 0.0, s2);
+    col += (1. - m2) * col1 + m2 * col2;
   }
-  // small Corner 
+  // Half circle
   else if (shapechoice == 3.0) {
-    float c = smallCorner( uv );
-     col += (1. - c) * col1 + c * col2;
+    float s2 = sdCircle( uv-vec2(0.5, 0.0), 0.5 );
+    float m2 = S(0.008, 0.0, s2);
+    col += (1. - m2) * col2 + m2 * col1;
   }
-  else if (shapechoice == 4.0) {
-      // one corner circle
-      float bc = bigCorner( uv  );
-      col += (1. - bc) * col1 + bc * col2;
+  // Arc
+  else if (shapechoice == 4.0) { 
+    float s3 = sdCircle( uv - vec2(-0.5, -0.5), 1.0);
+    float m3 = S(0.008, 0.0, s3);
+    col += (1. - m3) * col1 + m3 * col2;
   }
- else if (shapechoice == 5.0) {
-     // Two corner circles
-    float cc = circleCorner(uv );
-    col += (1. - cc) * col1 + cc * col2;
+else if (shapechoice == 5.0) { 
+  float s3 = sdCircle( uv - vec2(-0.5, -0.5), 1.0);
+  float m3 = S(0.008, 0.0, s3);
+  col += (1. - m3) * col2 + m3 * col1;
   }
-else if (shapechoice == 6.0) { 
-     //quarter circle
-    float bc2 = quarterCircle(uv );
-    col += (1. - bc2) * col1 + bc2 * col2;
-  }
-  else if (shapechoice == 7.0) {
-    float qc = halfCircle(uv );
-    col += (1. - qc) * col1 + qc * col2;
-  }
-  // Center swirl bigger
-   else if (shapechoice == 9.0) {
-    float cts = centerSwirl( uv );
-    col += (1. - cts) * col1 + cts * col2;
-  }
-  // Center swirl skinnier
-   else if (shapechoice == 10.0) {
-    float cts2 = centerSwirl2( uv );
-    col += (1. - cts2) * col1 + cts2 * col2;
-  }
-  else if (shapechoice == 11.0) {
-    float s = swirl( uv );
-    col += (1. - s) * col1 + s * col2;
-  }
+// else if (shapechoice == 6.0) { 
+//      //quarter circle
+//     float bc2 = quarterCircle(uv );
+//     col += (1. - bc2) * col1 + bc2 * col2;
+//   }
+  // else if (shapechoice == 7.0) {
+  //   float qc = halfCircle(uv );
+  //   col += (1. - qc) * col1 + qc * col2;
+  // }
+  // // Center swirl bigger
+  //  else if (shapechoice == 9.0) {
+  //   float cts = centerSwirl( uv );
+  //   col += (1. - cts) * col1 + cts * col2;
+  // }
+  // // Center swirl skinnier
+  //  else if (shapechoice == 10.0) {
+  //   float cts2 = centerSwirl2( uv );
+  //   col += (1. - cts2) * col1 + cts2 * col2;
+  // }
+  // else if (shapechoice == 11.0) {
+  //   float s = swirl( uv );
+  //   col += (1. - s) * col1 + s * col2;
+  // }
  
- else if (shapechoice == 12.0) {
-    float sw = swirl2( uv );
-    col += (1. - sw) * col1 + sw * col2;
-  }
+//  else if (shapechoice == 12.0) {
+//     float sw = swirl2( uv );
+//     col += (1. - sw) * col1 + sw * col2;
+//   }
   
-  else if (shapechoice == 13.0) {
-    float sw3 = swirl3( uv );
-    col += (1. - sw3) * col1 + sw3 * col2;
-  }
-  else if (shapechoice == 14.0) {
-    float ms = swirl4( uv );
-    col += (1. - ms) * col1 + ms * col2;
-  }
- else if (shapechoice == 15.0) { 
-    float sw5 = swirl5( uv );
-    col += (1. - sw5) * col1 + sw5 * col2;
-  }
- else if (shapechoice == 16.0) {
-    float cm = column( uv );
-    col += (1. - cm) * col1 + cm * col2;
-  }
-  else if (shapechoice == 17.0) {
-    float j = junction( uv );
-    col += (1. - j) * col1 + j * col2;
-  }
-  else if (shapechoice == 18.0) {
-    float l = lens( uv );
-    col += (1. - l) * col1 + l * col2;
-  }
-  else if (shapechoice == 19.0) {
-    float cr = cross( uv );
-    col += (1. - cr) * col1 + cr * col2;
-  }
-  else if (shapechoice == 20.0) {
-    float cb = centerBox( uv );
-    col += (1. - cb) * col1 + cb * col2;
-  }
-  else if (shapechoice == 21.0) {
-    float sl = slice( uv );
-    col += (1. - sl) * col1 + sl * col2;
-  }
-  else if (shapechoice == 22.0) {
-    float sls = slices( uv );
-    col += (1. - sls) * col1 + sls * col2;
-  }
-   else if (shapechoice == 23.0) {
-    float oc = offsetCircle( uv );
-    col += (1. - oc) * col1 + oc * col2;
-  }
-  else if (shapechoice == 24.0) {
-    float hb = halfBox( uv );
-    col += (1. - hb) * col1 + hb * col2;
-  }
-  else if (shapechoice == 25.0) {
-    float qb = quarterBox( uv );
-    col += (1. - qb) * col1 + qb * col2;
-  }
-  else if (shapechoice == 26.0) {
-    float sw4 = swirl4( uv );
-    col += (1. - sw4) * col1 + sw4 * col2;
-  }
-  else if (shapechoice == 27.0) {
-    float cv = curve( uv );
-    col += (1. - cv) * col1 + cv * col2;
-  }
-  else if (shapechoice == 28.0) {
-    float cv2 = curve2( uv );
-    col += (1. - cv2) * col1 + cv2 * col2;
-  }
+//   else if (shapechoice == 13.0) {
+//     float sw3 = swirl3( uv );
+//     col += (1. - sw3) * col1 + sw3 * col2;
+//   }
+//   else if (shapechoice == 14.0) {
+//     float ms = swirl4( uv );
+//     col += (1. - ms) * col1 + ms * col2;
+//   }
+//  else if (shapechoice == 15.0) { 
+//     float sw5 = swirl5( uv );
+//     col += (1. - sw5) * col1 + sw5 * col2;
+//   }
+//  else if (shapechoice == 16.0) {
+//     float cm = column( uv );
+//     col += (1. - cm) * col1 + cm * col2;
+//   }
+//   else if (shapechoice == 17.0) {
+//     float j = junction( uv );
+//     col += (1. - j) * col1 + j * col2;
+//   }
+//   else if (shapechoice == 18.0) {
+//     float l = lens( uv );
+//     col += (1. - l) * col1 + l * col2;
+//   }
+//   else if (shapechoice == 19.0) {
+//     float cr = cross( uv );
+//     col += (1. - cr) * col1 + cr * col2;
+//   }
+//   else if (shapechoice == 20.0) {
+//     float cb = centerBox( uv );
+//     col += (1. - cb) * col1 + cb * col2;
+//   }
+//   else if (shapechoice == 21.0) {
+//     float sl = slice( uv );
+//     col += (1. - sl) * col1 + sl * col2;
+//   }
+//   else if (shapechoice == 22.0) {
+//     float sls = slices( uv );
+//     col += (1. - sls) * col1 + sls * col2;
+//   }
+//    else if (shapechoice == 23.0) {
+//     float oc = offsetCircle( uv );
+//     col += (1. - oc) * col1 + oc * col2;
+//   }
+//   else if (shapechoice == 24.0) {
+//     float hb = halfBox( uv );
+//     col += (1. - hb) * col1 + hb * col2;
+//   }
+//   else if (shapechoice == 25.0) {
+//     float qb = quarterBox( uv );
+//     col += (1. - qb) * col1 + qb * col2;
+//   }
+//   else if (shapechoice == 26.0) {
+//     float sw4 = swirl4( uv );
+//     col += (1. - sw4) * col1 + sw4 * col2;
+//   }
+//   else if (shapechoice == 27.0) {
+//     float cv = curve( uv );
+//     col += (1. - cv) * col1 + cv * col2;
+//   }
+//   else if (shapechoice == 28.0) {
+//     float cv2 = curve2( uv );
+//     col += (1. - cv2) * col1 + cv2 * col2;
+//   }
   
-  else if (shapechoice == 29.0) {
-    float shc = smallHalfCircle( uv );
-    col += (1. - shc) * col1 + shc * col2;
-  }
-   else if (shapechoice == 30.0) {
-    float shc2 = smallerHalfCircle( uv );
-    col += (1. - shc2) * col1 + shc2 * col2;
-  }
-   else if (shapechoice == 31.0) {
-    float ds = doubleSwirl( uv );
-    col += (1. - ds) * col1 + ds * col2;
-  }
-  else if (shapechoice == 33.0) {
-    float as = anotherSwirl( uv );
-    col += (1. - as) * col1 + as * col2;
-  }
-  else if (shapechoice == 34.0) {
-    float bhc = btHalfCircle( uv );
-    col += (1. - bhc) * col1 + bhc * col2;
-  }
-  else if (shapechoice == 35.0) {
-    float thc = twoHalfCircles( uv );
-    col += (1. - thc) * col1 + thc * col2;
-  }
-  else if (shapechoice == 36.0) {
-    float tbhc = twoBigHalfCircles( uv );
-    col += (1. - tbhc) * col1 + tbhc * col2;
-  }
-else if (shapechoice == 37.0) {
-    float fhc = fourHalfCircles( uv );
-    col += (1. - fhc) * col1 + fhc * col2;
-  }
-   else if (shapechoice == 38.0) {
-    float rb = rainbow( uv );
-    col += (1. - rb) * col1 + rb * col2;
-  }
-    else if (shapechoice == 39.0) {
-    float bc = bigCircle( uv );
-    col += (1. - bc) * col1 + bc * col2;
-  }
-  else if (shapechoice == 40.0) {
-    float ccs = columnCircles( uv );
-    col += (1. - ccs) * col1 + ccs * col2;
-  }
-  else if (shapechoice == 41.0) {
-    float ccs2 = columnCircles2( uv );
-    col += (1. - ccs2) * col1 + ccs2 * col2;
-  }
-   else if (shapechoice == 42.0) {
-    float dls = doubleLens( uv );
-    col += (1. - dls) * col1 + dls * col2;
-  }
+//   else if (shapechoice == 29.0) {
+//     float shc = smallHalfCircle( uv );
+//     col += (1. - shc) * col1 + shc * col2;
+//   }
+//    else if (shapechoice == 30.0) {
+//     float shc2 = smallerHalfCircle( uv );
+//     col += (1. - shc2) * col1 + shc2 * col2;
+//   }
+//    else if (shapechoice == 31.0) {
+//     float ds = doubleSwirl( uv );
+//     col += (1. - ds) * col1 + ds * col2;
+//   }
+//   else if (shapechoice == 33.0) {
+//     float as = anotherSwirl( uv );
+//     col += (1. - as) * col1 + as * col2;
+//   }
+//   else if (shapechoice == 34.0) {
+//     float bhc = btHalfCircle( uv );
+//     col += (1. - bhc) * col1 + bhc * col2;
+//   }
+//   else if (shapechoice == 35.0) {
+//     float thc = twoHalfCircles( uv );
+//     col += (1. - thc) * col1 + thc * col2;
+//   }
+//   else if (shapechoice == 36.0) {
+//     float tbhc = twoBigHalfCircles( uv );
+//     col += (1. - tbhc) * col1 + tbhc * col2;
+//   }
+// else if (shapechoice == 37.0) {
+//     float fhc = fourHalfCircles( uv );
+//     col += (1. - fhc) * col1 + fhc * col2;
+//   }
+//    else if (shapechoice == 38.0) {
+//     float rb = rainbow( uv );
+//     col += (1. - rb) * col1 + rb * col2;
+//   }
+//     else if (shapechoice == 39.0) {
+//     float bc = bigCircle( uv );
+//     col += (1. - bc) * col1 + bc * col2;
+//   }
+//   else if (shapechoice == 40.0) {
+//     float ccs = columnCircles( uv );
+//     col += (1. - ccs) * col1 + ccs * col2;
+//   }
+//   else if (shapechoice == 41.0) {
+//     float ccs2 = columnCircles2( uv );
+//     col += (1. - ccs2) * col1 + ccs2 * col2;
+//   }
+//    else if (shapechoice == 42.0) {
+//     float dls = doubleLens( uv );
+//     col += (1. - dls) * col1 + dls * col2;
+//   }
  return col;
 }
 
@@ -690,12 +696,7 @@ void main()
   
    vec3 cs = checkSymmetry( uv);
    //col += cs;
- 
-  col += chooseShape( 42.0, uv, GREY, ROSE);
-  // col += chooseShape( 0.0, uv, GREEN, GREY);
-  //col = m * MAUVE +  PURPLE;
- // col = (1. - m) * MAUVE + m * PURPLE;
-  //col += (1. - m) * PURPLE + m * MAUVE;
- 
-    gl_FragColor = vec4(col,1.0);
+
+  col += chooseShape(tileChoice, uv, colA, colB);
+  gl_FragColor = vec4(col,1.0);
 }

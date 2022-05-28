@@ -13,12 +13,13 @@ new p5(sa => {
     let radio1;
 
     let button0;
+    let button1;
     let c0;
     let graphics0;
 
     sa.preload = () => {
         // load the the shader
-        shader0 = sa.loadShader('circles/basic.vert', 'circles/circles.frag');
+        shader0 = sa.loadShader('flowers/flowers.vert', 'flowers/flowers.frag');
     }
 
     sa.setup = () => {
@@ -39,13 +40,14 @@ new p5(sa => {
         button0 = sa.createButton('SAVE TILE A');
         button0.parent(divA);
         button0.mousePressed(sa.saveTile0);
+        
 
-        r1Slider = sa.createSlider(0, 255, 5);
-        g1Slider = sa.createSlider(0, 255, 32);
-        b1Slider = sa.createSlider(0, 255, 74);
-        r2Slider = sa.createSlider(0, 255, 180);
-        g2Slider = sa.createSlider(0, 255, 151);
-        b2Slider = sa.createSlider(0, 255, 214);
+        r1Slider = sa.createSlider(0, 255, 8);
+        g1Slider = sa.createSlider(0, 255, 61);
+        b1Slider = sa.createSlider(0, 255, 119);
+        r2Slider = sa.createSlider(0, 255, 218);
+        g2Slider = sa.createSlider(0, 255, 65);
+        b2Slider = sa.createSlider(0, 255, 103);
 
         let colors = sa.getItem("colors");
         if (colors !== null) {
@@ -82,7 +84,7 @@ new p5(sa => {
         colBlabel.style("color", "#555555");
         r2Slider.parent(div2);
         g2Slider.parent(div2);
-        b2Slider.parent(div2);         
+        b2Slider.parent(div2); 
     }
 
     sa.draw = () => {
@@ -117,6 +119,10 @@ new p5(sa => {
         sa.storeItem("colors", colors);
     }
 
+    sa.saveTile = () => {
+        sa.saveCanvas(c0, '0.png');
+    }
+
     sa.saveTile0 = () => {
         sa.storeItem("img0", c0.elt.toDataURL());
     }
@@ -132,9 +138,9 @@ new p5(sb => {
 
     sb.preload = () => {
         // load the the shader
-        shader1 = sb.loadShader('circles/basic.vert', 'circles/circles.frag');
+        shader1 = sb.loadShader('flowers/flowers.vert', 'flowers/flowers.frag');
     }
-
+    
     sb.setup = () => {
         sb.pixelDensity(1);
         sb.noStroke();
@@ -187,8 +193,6 @@ new p5(sb => {
     }
 });
 
-
-
 new p5(sc => {
     // a shader variable
     let shader2;
@@ -198,7 +202,7 @@ new p5(sc => {
 
     sc.preload = () => {
         // load the the shader
-        shader2 = sc.loadShader('circles/basic.vert', 'circles/circles.frag');
+        shader2 = sc.loadShader('flowers/flowers.vert', 'flowers/flowers.frag');
     }
 
     sc.setup = () => {
@@ -254,8 +258,6 @@ new p5(sc => {
     }
 });
 
-
-
 new p5(sd => {
     // a shader variable
     let shader3;
@@ -265,7 +267,7 @@ new p5(sd => {
 
     sd.preload = () => {
         // load the the shader
-        shader3 = sd.loadShader('circles/basic.vert', 'circles/circles.frag');
+        shader3 = sd.loadShader('flowers/flowers.vert', 'flowers/flowers.frag');
     }
 
     sd.setup = () => {
@@ -331,7 +333,7 @@ new p5(se => {
 
     se.preload = () => {
         // load the the shader
-        shader4 = se.loadShader('circles/basic.vert', 'circles/circles.frag');
+        shader4 = se.loadShader('flowers/flowers.vert', 'flowers/flowers.frag');
     }
 
     se.setup = () => {
@@ -397,7 +399,7 @@ new p5(sf => {
 
     sf.preload = () => {
         // load the the shader
-        shader5 = sf.loadShader('circles/basic.vert', 'circles/circles.frag');
+        shader5 = sf.loadShader('flowers/flowers.vert', 'flowers/flowers.frag');
     }
 
     sf.setup = () => {
@@ -462,7 +464,7 @@ new p5(sg => {
 
     sg.preload = () => {
         // load the the shader
-        shader6 = sg.loadShader('circles/basic.vert', 'cross/cross.frag');
+        shader6 = sg.loadShader('flowers/flowers.vert', 'flowers/flowers.frag');
     }
 
     sg.setup = () => {
@@ -519,70 +521,70 @@ new p5(sg => {
 });
 
 
-// new p5(sh => {
-//     // a shader variable
-//     let shader7;
-//     let button7;
-//     let c7;
-//     let graphics7
+new p5(sh => {
+    // a shader variable
+    let shader7;
+    let button7;
+    let c7;
+    let graphics7
 
-//     sh.preload = () => {
-//         // load the the shader
-//         shader7 = sh.loadShader('circles/basic.vert', 'circles/circles.frag');
-//     }
+    sh.preload = () => {
+        // load the the shader
+        shader7 = sh.loadShader('flowers/flowers.vert', 'flowers/flowers.frag');
+    }
 
-//     sh.setup = () => {
-//         sh.pixelDensity(1);
-//         sh.noStroke();
-//         // shaders require WEBGL mode to work
+    sh.setup = () => {
+        sh.pixelDensity(1);
+        sh.noStroke();
+        // shaders require WEBGL mode to work
 
-//         let divH = sh.createDiv();
-//         divH.position(335, 750);
-//         divH.style('max-width', '100px');
-//         c7 = sh.createCanvas(100, 100, sh.WEBGL);
-//         c7.parent(divH);
-//         sh.pixelDensity(1);
-//         graphics7 = sh.createGraphics(100, 100, sh.WEBGL);
+        let divH = sh.createDiv();
+        divH.position(335, 750);
+        divH.style('max-width', '100px');
+        c7 = sh.createCanvas(100, 100, sh.WEBGL);
+        c7.parent(divH);
+        sh.pixelDensity(1);
+        graphics7 = sh.createGraphics(100, 100, sh.WEBGL);
 
-//         button7 = sh.createButton('SAVE TILE H');
-//         button7.mousePressed(sh.saveTile7);
-//         button7.parent(divH);
+        button7 = sh.createButton('SAVE TILE H');
+        button7.mousePressed(sh.saveTile7);
+        button7.parent(divH);
 
-//         let colors = sh.getItem("colors");
-//         if (colors !== null) {
-//             r1Slider.value(colors.r1);
-//             g1Slider.value(colors.g1);
-//             b1Slider.value(colors.b1);
-//             r2Slider.value(colors.r2);
-//             g2Slider.value(colors.g2);
-//             b2Slider.value(colors.b2);
-//         }
+        let colors = sh.getItem("colors");
+        if (colors !== null) {
+            r1Slider.value(colors.r1);
+            g1Slider.value(colors.g1);
+            b1Slider.value(colors.b1);
+            r2Slider.value(colors.r2);
+            g2Slider.value(colors.g2);
+            b2Slider.value(colors.b2);
+        }
         
-//     }
+    }
 
-//     sh.draw = () => {
-//         let r1 = r1Slider.value();
-//         let g1 = g1Slider.value();
-//         let b1 = b1Slider.value();
-//         let r2 = r2Slider.value();
-//         let g2 = g2Slider.value();
-//         let b2 = b2Slider.value();
-//         shader7.setUniform('u_resolution', [sh.width, sh.height]);
-//         shader7.setUniform('colorAr', r1);
-//         shader7.setUniform('colorAg', g1);
-//         shader7.setUniform('colorAb', b1);
-//         shader7.setUniform('colorBr', r2);
-//         shader7.setUniform('colorBg', g2);
-//         shader7.setUniform('colorBb', b2);
-//         shader7.setUniform('tileChoice', 7.0);
-//         sh.shader(shader7);
-//         sh.rect(0, 0, sh.width, sh.height)
-//     }
+    sh.draw = () => {
+        let r1 = r1Slider.value();
+        let g1 = g1Slider.value();
+        let b1 = b1Slider.value();
+        let r2 = r2Slider.value();
+        let g2 = g2Slider.value();
+        let b2 = b2Slider.value();
+        shader7.setUniform('u_resolution', [sh.width, sh.height]);
+        shader7.setUniform('colorAr', r1);
+        shader7.setUniform('colorAg', g1);
+        shader7.setUniform('colorAb', b1);
+        shader7.setUniform('colorBr', r2);
+        shader7.setUniform('colorBg', g2);
+        shader7.setUniform('colorBb', b2);
+        shader7.setUniform('tileChoice', 7.0);
+        sh.shader(shader7);
+        sh.rect(0, 0, sh.width, sh.height)
+    }
  
-//     sh.saveTile7 = () => {
-//         sh.storeItem("img7", c7.elt.toDataURL());
-//     }
-// });
+    sh.saveTile7 = () => {
+        sh.storeItem("img7", c7.elt.toDataURL());
+    }
+});
 
 
 
@@ -603,12 +605,12 @@ new p5(wfc => {
     let graphics;
 
     wfc.preload = () => {
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 7; i++) {
             imgData[i] = wfc.getItem(`img${i}`);
             if (imgData[i] !== null) {
                 tileImages[i] = wfc.loadImage(imgData[i]);
             } else {
-                const path = "circles/circle_tiles";
+                const path = "flowers/flower_tiles";
                 tileImages[i] = wfc.loadImage(`${path}/${i}.png`);
 
             }
@@ -644,15 +646,14 @@ new p5(wfc => {
         button.mousePressed(wfc.clear);
 
         // Load and code the tiles
-        tiles[0] = new Tile(tileImages[0], ["AA", "AA", "AA", "AA"]);
-        tiles[1] = new Tile(tileImages[1], ["BB", "BB", "BB", "BB"]);
-        tiles[2] = new Tile(tileImages[2], ["AA", "BB", "AA", "AA"]);
-        tiles[3] = new Tile(tileImages[3], ["BB", "AA", "BB", "BB"]);
-        tiles[4] = new Tile(tileImages[4], ["AA", "AA", "BB", "BB"]);
-        tiles[5] = new Tile(tileImages[5], ["BB", "BB", "AA", "AA"]);
-        
-
-        for (let i = 0; i < 6; i++) {
+        tiles[0] = new Tile(tileImages[0], ["A", "A", "A", "A"]);
+        tiles[1] = new Tile(tileImages[1], ["A", "B", "A", "A"]);
+        tiles[2] = new Tile(tileImages[2], ["A", "B", "A", "C"]);
+        tiles[3] = new Tile(tileImages[3], ["A", "C", "A", "B"]);
+        tiles[4] = new Tile(tileImages[4], ["C", "C", "A", "A"]);
+        tiles[5] = new Tile(tileImages[5], ["C", "C", "C", "C"]);
+        tiles[6] = new Tile(tileImages[6], ["C", "C", "C", "C"]);
+        for (let i = 0; i < 7; i++) {
             for (let j = 1; j < 4; j++) {
                 tiles.push(tiles[i].rotate(j));
             }

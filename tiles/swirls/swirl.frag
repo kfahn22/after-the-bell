@@ -84,14 +84,6 @@ float Arc( vec2 uv, float r1, float r2) {
   return abs(sdCircle(uv, r1)) - r2;
 }
 
-float sdPie( in vec2 p, in vec2 c, in float r )
-{
-    p.x = abs(p.x);
-    float l = length(p) - r;
-    float m = length(p-c*clamp(dot(p,c),0.0,r)); // c=sin/cos of aperture
-    return max(l,m*sign(c.y*p.x-c.x*p.y));
-}
-
 // Function to check for symmetry of design
 vec3 checkSymmetry( vec2 uv ) {
     float d1 = sdSegment(uv, vec2(-.5, .0), vec2(0.5, .0));
