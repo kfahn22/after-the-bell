@@ -1,4 +1,4 @@
-// Frag shader creates tiles for wave function collapse
+// This shader demonstrates how to move shapes 
 
 #ifdef GL_ES
 precision mediump float;
@@ -12,7 +12,11 @@ uniform float colorAb;
 uniform float colorBr;
 uniform float colorBg;
 uniform float colorBb;
+uniform float colorCr;
+uniform float colorCg;
+uniform float colorCb;
 uniform float tileChoice;
+
 uniform float radA;
 uniform vec2 offsetA;
 uniform float radB;
@@ -30,6 +34,7 @@ uniform vec2 offsetD;
 // Define choosen colors
 #define colA vec3(colorAr, colorAg, colorAb)/255.
 #define colB vec3(colorBr, colorBg, colorBb)/255.
+#define colC vec3(colorCr, colorCg, colorCb)/255.
 
 // Grid Colors
 #define RED vec3(255,0,0)/255.
@@ -165,14 +170,27 @@ vec3 checkSymmetry( vec2 uv ) {
 
 float circle(vec2 uv, vec2 os, float r ) {
   
-  float s = sdCircle( uv - os, r );
-  float m = S(0.008, 0.0, s);
+  float s1 = sdCircle( uv - os, r );
+  float m1 = S(0.008, 0.0, s1);
+  
+  
   // if (b == 1.0) {
   //   return m;
   // } else if (b == 0.0) {
   //   return s;
   // }
-  return m;
+  return m1 ;
+}
+
+float circle2(vec2 uv, vec2 os, float r ) {
+  float s1 = sdCircle( uv - 0.2*os, 0.5*r );
+  float m1 = S(0.008, 0.0, s1);
+  // if (b == 1.0) {
+  //   return m;
+  // } else if (b == 0.0) {
+  //   return s;
+  // }
+  return m1 ;
 }
 
 float smCircleSquare( vec2 uv ) {
@@ -415,23 +433,29 @@ float curve( vec2 uv ) {
 
 
 // Choose shape
-vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2 ) {
+vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2, vec3 col3 ) {
   vec3 col = vec3(0.0);
   if (shapechoice == 0.0) {
-    float c = circle( uv, offsetA, radA );
-    col += (1. - c) * col1 + c * col2;
+    float c1 = circle( uv, offsetA, radA );
+    float c2 = circle( uv, (1.-0.75) *  offsetA, 0.7 * radA );
+  // col += (1. - c2) * col1 + c2 * col2;
+
+   col += (1. - c1 - c2) * col1 + c1 * col2 +  c2 * col3;
   }
   else if (shapechoice == 1.0) {
-    float cb = circle( uv, offsetB, radB );
-    col += (1. - cb) * col1 + cb * col2;
+    float cb1 = circle( uv, offsetB, radB );
+    float cb2 = circle( uv, (1.-0.75) *  offsetB, 0.7 * radB );
+    col += (1. - cb1 - cb2) * col1 + cb1 * col2 +  cb2 * col3;
   }
  else if (shapechoice == 2.0) {
-    float cc = circle( uv, offsetC, radC );
-    col += (1. - cc) * col1 + cc * col2;
+   float cc1 = circle( uv, offsetC, radC );
+   float cc2 = circle( uv, (1.-0.75) * offsetC, 0.7 * radC );
+    col += (1. - cc1 - cc2) * col1 + cc1 * col2 + cc2 * col3;
   }
   else if (shapechoice == 3.0) {
-    float cc = circle( uv, offsetD, radD );
-    col += (1. - cc) * col1 + cc * col2;
+    float cd1 = circle( uv, offsetD, radD );
+    float cd2 = circle( uv, (1.-0.75) * offsetD, 0.7 * radD );
+    col += (1. - cd1- cd2) * col1 + cd1 * col2 + cd2*col3;
   }
   //  else if (shapechoice == 2.0) {
   //   float ds = doubleSwirl( uv );
@@ -453,7 +477,7 @@ void main()
    vec3 cs = checkSymmetry( uv);
    //col += cs;
  
-   col += chooseShape(tileChoice, uv, colA, colB);
+   col += chooseShape(tileChoice, uv, colA, colB, colC);
  
     gl_FragColor = vec4(col,1.0);
 }

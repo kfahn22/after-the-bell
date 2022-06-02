@@ -23,7 +23,7 @@ new p5(sa => {
 
     sa.preload = () => {
         // load the the shader
-        shader0 = sa.loadShader('circles/basic.vert', 'swirls/swirl.frag');
+        shader0 = sa.loadShader('circles/basic.vert', 'playground/playground.frag');
     }
 
     sa.setup = () => {
@@ -55,7 +55,9 @@ new p5(sa => {
         r2Slider = sa.createSlider(0, 255, 255);
         g2Slider = sa.createSlider(0, 255, 255);
         b2Slider = sa.createSlider(0, 255, 255);
-
+        r3Slider = sa.createSlider(0, 255, 125);
+        g3Slider = sa.createSlider(0, 255, 125);
+        b3Slider = sa.createSlider(0, 255, 125);
         radSlider = sa.createSlider(0, 100, 50, 1);
         xSlider = sa.createSlider(0, 300, 200, 5);
         ySlider = sa.createSlider(0, 300, 100, 5);
@@ -68,6 +70,9 @@ new p5(sa => {
             r2Slider.value(colors.r2);
             g2Slider.value(colors.g2);
             b2Slider.value(colors.b2);
+            r3Slider.value(colors.r3);
+            g3Slider.value(colors.g3);
+            b3Slider.value(colors.b3);
         }
         r1Slider.changed(sa.storeColors);
         g1Slider.changed(sa.storeColors);
@@ -75,6 +80,9 @@ new p5(sa => {
         r2Slider.changed(sa.storeColors);
         g2Slider.changed(sa.storeColors);
         b2Slider.changed(sa.storeColors);
+        r3Slider.changed(sa.storeColors);
+        g3Slider.changed(sa.storeColors);
+        b3Slider.changed(sa.storeColors);
 
         let parameters = sa.getItem("parameters");
         if (parameters !== null) {
@@ -106,6 +114,16 @@ new p5(sa => {
         r2Slider.parent(div2);
         g2Slider.parent(div2);
         b2Slider.parent(div2);
+
+        let div3 = sa.createDiv();
+        div3.style('font-size', '16px');
+        div3.position(10, 800);
+        colClabel = sa.createP('Color C');
+        colClabel.parent(div3);
+        colClabel.style("color", "#555555");
+        r3Slider.parent(div3);
+        g3Slider.parent(div3);
+        b3Slider.parent(div3);  
 
         let div3a = sa.createDiv();
         div3a.style('font-size', '16px');
@@ -144,6 +162,9 @@ new p5(sa => {
         let r2 = r2Slider.value();
         let g2 = g2Slider.value();
         let b2 = b2Slider.value();
+        let r3 = r3Slider.value();
+        let g3 = g3Slider.value();
+        let b3 = b3Slider.value();
 
         let rad = radSlider.value();
         let newrad = sa.map(rad, 0, 100, 0.0, 1.0);
@@ -159,6 +180,9 @@ new p5(sa => {
         shader0.setUniform('colorBr', r2);
         shader0.setUniform('colorBg', g2);
         shader0.setUniform('colorBb', b2);
+        shader0.setUniform('colorCr', r3);
+        shader0.setUniform('colorCg', g3);
+        shader0.setUniform('colorCb', b3);
         shader0.setUniform('tileChoice', 0.0);
         shader0.setUniform('radA', newrad);
         shader0.setUniform('offsetA', [xOffset, yOffset]);
@@ -175,6 +199,9 @@ new p5(sa => {
             r2: r2Slider.value(),
             g2: g2Slider.value(),
             b2: b2Slider.value(),
+            r3: r3Slider.value(),
+            g3: g3Slider.value(),
+            b3: b3Slider.value(),
         }
 
         sa.storeItem("colors", colors);
@@ -204,7 +231,7 @@ new p5(sb => {
 
     sb.preload = () => {
         // load the the shader
-        shader1 = sb.loadShader('circles/basic.vert', 'swirls/swirl.frag');
+        shader1 = sb.loadShader('circles/basic.vert', 'playground/playground.frag');
     }
 
     sb.setup = () => {
@@ -228,9 +255,12 @@ new p5(sb => {
             r2Slider.value(colors.r2);
             g2Slider.value(colors.g2);
             b2Slider.value(colors.b2);
+            r3Slider.value(colors.r3);
+            g3Slider.value(colors.g3);
+            b3Slider.value(colors.b3);
         }
 
-        let parameters = sb.getItem("aParameters");
+        let parameters = sb.getItem("parameters");
         if (parameters !== null) {
             radSlider.value(parameters.rad);
             xSlider.value(parameters.x);
@@ -246,6 +276,9 @@ new p5(sb => {
         let r2 = r2Slider.value();
         let g2 = g2Slider.value();
         let b2 = b2Slider.value();
+        let r3 = r3Slider.value();
+        let g3 = g3Slider.value();
+        let b3 = b3Slider.value();
         let rad = radSlider.value();  
         let newrad = sb.map(rad, 0, 100, 1.0, 0.0);
         let x = xSlider.value();
@@ -260,6 +293,9 @@ new p5(sb => {
         shader1.setUniform('colorBr', r2);
         shader1.setUniform('colorBg', g2);
         shader1.setUniform('colorBb', b2);
+        shader1.setUniform('colorCr', r3);
+        shader1.setUniform('colorCg', g3);
+        shader1.setUniform('colorCb', b3);
         shader1.setUniform('tileChoice', 1.0);
         shader1.setUniform('radB', newrad);
         shader1.setUniform('offsetB', [xOffset, yOffset]);
@@ -283,7 +319,7 @@ new p5(sc => {
 
     sc.preload = () => {
         // load the the shader
-        shader2 = sc.loadShader('circles/basic.vert', 'swirls/swirl.frag');
+        shader2 = sc.loadShader('circles/basic.vert', 'playground/playground.frag');
     }
 
     sc.setup = () => {
@@ -307,6 +343,9 @@ new p5(sc => {
             r2Slider.value(colors.r2);
             g2Slider.value(colors.g2);
             b2Slider.value(colors.b2);
+            r3Slider.value(colors.r3);
+            g3Slider.value(colors.g3);
+            b3Slider.value(colors.b3);
         }
         let parameters = sc.getItem("parameters");
         if (parameters !== null) {
@@ -324,6 +363,9 @@ new p5(sc => {
         let r2 = r2Slider.value();
         let g2 = g2Slider.value();
         let b2 = b2Slider.value();
+        let r3 = r3Slider.value();
+        let g3 = g3Slider.value();
+        let b3 = b3Slider.value();
         let rad = radSlider.value();  
         let newrad = sc.map(rad, 0, 100, 0.0, 1.0);
         let x = xSlider.value();
@@ -338,6 +380,9 @@ new p5(sc => {
         shader2.setUniform('colorBr', r2);
         shader2.setUniform('colorBg', g2);
         shader2.setUniform('colorBb', b2);
+        shader2.setUniform('colorCr', r3);
+        shader2.setUniform('colorCg', g3);
+        shader2.setUniform('colorCb', b3);
         shader2.setUniform('tileChoice', 2.0);
         shader2.setUniform('radC', newrad);
         shader2.setUniform('offsetC', [xOffset, yOffset]);
@@ -359,7 +404,7 @@ new p5(sd => {
 
     sd.preload = () => {
         // load the the shader
-        shader3 = sd.loadShader('circles/basic.vert', 'swirls/swirl.frag');
+        shader3 = sd.loadShader('circles/basic.vert', 'playground/playground.frag');
     }
 
     sd.setup = () => {
@@ -387,6 +432,9 @@ new p5(sd => {
             r2Slider.value(colors.r2);
             g2Slider.value(colors.g2);
             b2Slider.value(colors.b2);
+            r3Slider.value(colors.r3);
+            g3Slider.value(colors.g3);
+            b3Slider.value(colors.b3);
         }
         let parameters = sd.getItem("parameters");
         if (parameters !== null) {
@@ -404,6 +452,9 @@ new p5(sd => {
         let r2 = r2Slider.value();
         let g2 = g2Slider.value();
         let b2 = b2Slider.value();
+        let r3 = r3Slider.value();
+        let g3 = g3Slider.value();
+        let b3 = b3Slider.value();
         let rad = radSlider.value();  
         let newrad = sd.map(rad, 0, 100, 1.0, 0.0);
         let x = xSlider.value();
@@ -417,6 +468,9 @@ new p5(sd => {
         shader3.setUniform('colorBr', r2);
         shader3.setUniform('colorBg', g2);
         shader3.setUniform('colorBb', b2);
+        shader3.setUniform('colorCr', r3);
+        shader3.setUniform('colorCg', g3);
+        shader3.setUniform('colorCb', b3);
         shader3.setUniform('tileChoice', 3.0);
         shader3.setUniform('radD', newrad);
         shader3.setUniform('offsetD', [xOffset, yOffset]);

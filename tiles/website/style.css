@@ -1,6 +1,6 @@
 html, body {
   margin: 1vw;
-  padding: 2vw;
+  /* padding: 2vw; */
   background-color: #1ba1db;
 }
 header{
@@ -8,7 +8,7 @@ header{
   background-repeat:repeat-x;
   background-size: cover;
   /* height: 15vh; */
-  margin-bottom: 5%;
+  /* margin-bottom: 5%; */
   color: #1ba1db;
   font-size: 100%;
 }
@@ -30,8 +30,10 @@ header #digital_quilts {
   font-size: 100%;
   margin-bottom: 5%;
 }
+
 header #circles{
-  background-image: url("assets/digital_quilts/circles.png");
+  height: 25vh;
+  background-image: url("assets/header/circle.png");
   background-repeat:repeat-x;
   background-size: cover;
   color: #1ba1db;
@@ -78,7 +80,7 @@ h1{
   font-size: 300%;
   text-align: center;
   text-transform: uppercase;
-  text-shadow: 3px 3px #0D1A44;
+  text-shadow: 2px 2px #0D1A44;
   color: #FFFFFF;
 }
 
@@ -99,7 +101,7 @@ code {
 }
 
 div {
-  margin: 2 vh;
+  margin: 2vh;
   padding: 2vw;
   color: #fff;
 }
@@ -252,7 +254,8 @@ the links and position the close button again, so they don't overlap */
    .topNav  a {
         visibility: visible;
         background-color: transparent;
-        color:white;
+        color: #fff;
+        /* color:#1ba1db; */
         font-weight: bold;
         font-size: 100%;
         text-align: center;
@@ -261,7 +264,7 @@ the links and position the close button again, so they don't overlap */
         text-decoration: none;
         border: 4px solid #ffffff;
         border-radius: 4px;
-        margin-top: 5%;
+        /* margin-top: 5%; */
         margin-left: 5%;
         margin-right:5%;
         }
