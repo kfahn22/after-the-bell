@@ -23,7 +23,7 @@ new p5(sa => {
 
     sa.preload = () => {
         // load the the shader
-        shader0 = sa.loadShader('circles/basic.vert', 'playground/playground.frag');
+        shader0 = sa.loadShader('circles/basic.vert', 'playground/reflection.frag');
     }
 
     sa.setup = () => {
@@ -184,8 +184,8 @@ new p5(sa => {
         shader0.setUniform('colorCg', g3);
         shader0.setUniform('colorCb', b3);
         shader0.setUniform('tileChoice', 0.0);
-        shader0.setUniform('radA', newrad);
-        shader0.setUniform('offsetA', [xOffset, yOffset]);
+        shader0.setUniform('rad', newrad);
+        shader0.setUniform('offset', [xOffset, yOffset]);
 
         sa.shader(shader0);
         sa.rect(0, 0, sa.width, sa.height);
@@ -231,7 +231,7 @@ new p5(sb => {
 
     sb.preload = () => {
         // load the the shader
-        shader1 = sb.loadShader('circles/basic.vert', 'playground/playground.frag');
+        shader1 = sb.loadShader('circles/basic.vert', 'playground/reflection.frag');
     }
 
     sb.setup = () => {
@@ -297,8 +297,8 @@ new p5(sb => {
         shader1.setUniform('colorCg', g3);
         shader1.setUniform('colorCb', b3);
         shader1.setUniform('tileChoice', 1.0);
-        shader1.setUniform('radB', newrad);
-        shader1.setUniform('offsetB', [xOffset, yOffset]);
+        shader1.setUniform('rad', newrad);
+        shader1.setUniform('offset', [xOffset, yOffset]);
 
         sb.shader(shader1);
         sb.rect(0, 0, sb.width, sb.height)
@@ -319,7 +319,7 @@ new p5(sc => {
 
     sc.preload = () => {
         // load the the shader
-        shader2 = sc.loadShader('circles/basic.vert', 'playground/playground.frag');
+        shader2 = sc.loadShader('circles/basic.vert', 'playground/reflection.frag');
     }
 
     sc.setup = () => {
@@ -384,8 +384,8 @@ new p5(sc => {
         shader2.setUniform('colorCg', g3);
         shader2.setUniform('colorCb', b3);
         shader2.setUniform('tileChoice', 2.0);
-        shader2.setUniform('radC', newrad);
-        shader2.setUniform('offsetC', [xOffset, yOffset]);
+        shader2.setUniform('rad', newrad);
+        shader2.setUniform('offset', [xOffset, yOffset]);
         sc.shader(shader2);
         sc.rect(0, 0, sc.width, sc.height)
     }
@@ -404,7 +404,7 @@ new p5(sd => {
 
     sd.preload = () => {
         // load the the shader
-        shader3 = sd.loadShader('circles/basic.vert', 'playground/playground.frag');
+        shader3 = sd.loadShader('circles/basic.vert', 'playground/reflection.frag');
     }
 
     sd.setup = () => {
@@ -472,8 +472,8 @@ new p5(sd => {
         shader3.setUniform('colorCg', g3);
         shader3.setUniform('colorCb', b3);
         shader3.setUniform('tileChoice', 3.0);
-        shader3.setUniform('radD', newrad);
-        shader3.setUniform('offsetD', [xOffset, yOffset]);
+        shader3.setUniform('rad', newrad);
+        shader3.setUniform('offset', [xOffset, yOffset]);
         sd.shader(shader3);
         sd.rect(0, 0, sd.width, sd.height)
     }

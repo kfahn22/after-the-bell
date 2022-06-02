@@ -17,14 +17,14 @@ uniform float colorCg;
 uniform float colorCb;
 uniform float tileChoice;
 
-uniform float radA;
-uniform vec2 offsetA;
-uniform float radB;
-uniform vec2 offsetB;
-uniform float radC;
-uniform vec2 offsetC;
-uniform float radD;
-uniform vec2 offsetD;
+uniform float rad;
+uniform vec2 offset;
+// uniform float radB;
+// uniform vec2 offsetB;
+// uniform float radC;
+// uniform vec2 offsetC;
+// uniform float radD;
+// uniform vec2 offsetD;
 
 #define sm = 1.0;
 #define S smoothstep
@@ -436,25 +436,25 @@ float curve( vec2 uv ) {
 vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2, vec3 col3 ) {
   vec3 col = vec3(0.0);
   if (shapechoice == 0.0) {
-    float c1 = circle( uv, offsetA, radA );
-    float c2 = circle( uv, (1.-0.75) *  offsetA, 0.7 * radA );
+    float c1 = circle( uv, offset, rad );
+    float c2 = circle( uv, (1.-0.75) *  offset, 0.7 * rad );
   // col += (1. - c2) * col1 + c2 * col2;
 
    col += (1. - c1 - c2) * col1 + c1 * col2 +  c2 * col3;
   }
   else if (shapechoice == 1.0) {
-    float cb1 = circle( uv, offsetB, radB );
-    float cb2 = circle( uv, (1.-0.75) *  offsetB, 0.7 * radB );
+    float cb1 = circle( uv, offset, rad );
+    float cb2 = circle( uv, (1.-0.75) *  offset, 0.7 * rad );
     col += (1. - cb1 - cb2) * col1 + cb1 * col2 +  cb2 * col3;
   }
  else if (shapechoice == 2.0) {
-   float cc1 = circle( uv, offsetC, radC );
-   float cc2 = circle( uv, (1.-0.75) * offsetC, 0.7 * radC );
+   float cc1 = circle( uv, offset, rad );
+   float cc2 = circle( uv, (1.-0.75) * offset, 0.7 * rad );
     col += (1. - cc1 - cc2) * col1 + cc1 * col2 + cc2 * col3;
   }
   else if (shapechoice == 3.0) {
-    float cd1 = circle( uv, offsetD, radD );
-    float cd2 = circle( uv, (1.-0.75) * offsetD, 0.7 * radD );
+    float cd1 = circle( uv, offset, rad );
+    float cd2 = circle( uv, (1.-0.75) * offset, 0.7 * rad );
     col += (1. - cd1- cd2) * col1 + cd1 * col2 + cd2*col3;
   }
   //  else if (shapechoice == 2.0) {
