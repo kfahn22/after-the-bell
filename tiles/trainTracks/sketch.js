@@ -26,7 +26,7 @@ new p5(tg => { // This sketch generates train track tiles that can be used with 
 
   tg.preload = () => {
       // load the the shader
-      trainShader = tg.loadShader('train_track_generator/train.vert', 'train_track_generator/train.frag');
+      trainShader = tg.loadShader('trainTracks/train.vert', 'trainTracks/smallTrack.frag');
   }
 
 

@@ -648,11 +648,11 @@ new p5(wfc => {
         para2.style("color", "#555555");
         para2.position(350, 50);
         button = wfc.createButton('CLEAR STORAGE');
-        button.position(350, 300);
+        button.position(350, 250);
         button.mousePressed(wfc.clear);
 
         button1 = wfc.createButton("SHARE ARTWORK");
-        button1.position(350, 300);
+        button1.position(350, 350);
         button1.mousePressed(wfc.share);
         button1.id('share');
         

@@ -623,7 +623,7 @@ new p5(wfc => {
             if (imgData[i] !== null) {
                 tileImages[i] = wfc.loadImage(imgData[i]);
             } else {
-                const path = "trainTracks/greenTracks";
+                const path = "trainTracks/tiles";
                 tileImages[i] = wfc.loadImage(`${path}/${i}.png`);
 
             }

@@ -22,7 +22,7 @@ new p5(fb => {
             bc = bkcol;
         }
         // load the the shader
-        train0 = fb.loadShader('train_track_generator/train.vert', 'train_track_generator/smallTrack.frag');
+        train0 = fb.loadShader('trainTracks/train.vert', 'trainTracks/smallTrack.frag');
     }
 
     fb.setup = () => {
