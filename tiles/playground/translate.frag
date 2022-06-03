@@ -434,24 +434,31 @@ vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2, vec3 col3 ) 
   if (shapechoice == 0.0) {
     float c1 = circle( uv, offset1, rad1 );
     float c2 = circle( uv, vec2(offset1.x + offset2.x, offset1.y + offset2.y), rad2 );
-  //col += (1. - c2) * col1 + c2 * col2;
+    float c = c1 - c2;
+    col += (1. - c) * col1 + c * col2;
 
-   col += (1. - c1  - c2) * col1 + c1 * col2 +  c2 * col3;
+   //col += (1. - c1  - c2) * col1 + c1 * col2 +  c2 * col3;
   }
   else if (shapechoice == 1.0) {
     float cb1 = circle( uv, offset1, rad1 );
     float cb2 = circle( uv, vec2(offset1.x + offset2.x, offset1.y + offset2.y), rad2 );
-    col += (1. - cb1- cb2 ) * col1 + cb1 * col2 + cb2 * col3;
+    float cb = cb1 - cb2;
+    col += (1. - cb) * col1 + cb * col2;
+    //col += (1. - cb1- cb2 ) * col1 + cb1 * col2 + cb2 * col3;
   }
  else if (shapechoice == 2.0) {
    float cc1 = circle( uv, offset1, rad1 );
    float cc2 = circle( uv, vec2(offset1.x + offset2.x, offset1.y + offset2.y), rad2 );
-    col += (1. - cc1 - cc2 ) * col1 + cc1 * col2 + cc2 * col3;
+   float cc = cc1 - cc2;
+   col += (1. - cc) * col1 + cc * col2;
+   //col += (1. - cc1 - cc2 ) * col1 + cc1 * col2 + cc2 * col3;
   }
   else if (shapechoice == 3.0) {
     float cd1 = circle( uv, offset1, rad1 );
     float cd2 = circle( uv, vec2(offset1.x + offset2.x, offset1.y + offset2.y),  rad2 );
-    col += (1. - cd1 - cd2) * col1 + cd1 * col2 + cd2*col3;
+    float cd = cd1 - cd2;
+    col += (1. - cd) * col1 + cd * col2;
+    //col += (1. - cd1 - cd2) * col1 + cd1 * col2 + cd2*col3;
   }
   //  else if (shapechoice == 2.0) {
   //   float ds = doubleSwirl( uv );
@@ -460,6 +467,10 @@ vec3 chooseShape( float shapechoice, vec2 uv, vec3 col1, vec3 col2, vec3 col3 ) 
   // else if (shapechoice == 3.0) {
   //   float as = anotherSwirl( uv );
   //   col += (1. - as) * col1 + as * col2;
+  // }
+  //  if ( sm == 1.0) { 
+  //   vec3 cs = checkSymmetry( uv);
+  //   col += cs;
   // }
  return col;
 }
@@ -471,7 +482,7 @@ void main()
     vec3 col = vec3(0);
   
    vec3 cs = checkSymmetry( uv);
-   //col += cs;
+  //col += cs;
  
    col += chooseShape(tileChoice, uv, colA, colB, colC);
  

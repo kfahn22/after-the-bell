@@ -90,6 +90,11 @@ h1{
   margin: 1vw;
 }
 
+#construction {
+  font-size: 300%;
+  text-align:center;
+}
+
 canvas {
   display: block;
 }
@@ -251,6 +256,7 @@ the links and position the close button again, so they don't overlap */
         text-align: center;
   }
 
+  
    .topNav  a {
         visibility: visible;
         background-color: transparent;
@@ -259,14 +265,14 @@ the links and position the close button again, so they don't overlap */
         font-weight: bold;
         font-size: 100%;
         text-align: center;
-        width: 10%;
+        width: 9%;
         padding: 2px;
         text-decoration: none;
         border: 4px solid #ffffff;
         border-radius: 4px;
         /* margin-top: 5%; */
-        margin-left: 5%;
-        margin-right:5%;
+        margin-left: 2%;
+        margin-right:2%;
         }
     .topNav a:active {
             color: #60fbff !important;
