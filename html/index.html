@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>After the Bell</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script> -->
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+
+</head>
+
+<body>
+	<header>
+		<h1>AFTER THE BELL</h1>
+		<nav id="myNavBar">
+			<div class="overlay" id="myNav">
+				<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+				<div class="overlay-content">
+					<a href="about.html" id="aboutMe">About</a>
+					<a href="wfc.html">WFC</a>
+					<a href="digital_quilts.html" id="genArt">Digital Quilts</a>
+					<a href="tiles.html" id="tiles">Tiles</a>
+					<a href="tile_creator.html">Tile Creator</a>
+					<a href="code.html">Code</a>
+				</div>
+			</div>
+
+			<div class="topNav">
+				<a href="index.html" class="active" id="a0">Home</a>
+				<a href="about.html">About</a>
+				<a href="wfc.html">WFC</a>
+				<a href="digital_quilts.html">Digital Quilts</a>
+				<a href="tiles.html">Tiles</a>
+				<a href="tile_creator.html">Tile Creator</a>
+				<a href="code.html">Code</a>
+			</div>
+
+			<!-- Use any element to open/show the overlay navigation menu-->
+			<button id="ham"><span onclick="openNav()"><i class="fa fa-bars"></i></span></button>
+		</nav>
+	</header>
+
+	<div class="flex-container" id="flex">
+		<!--<input class="form-control" id="myInput" type="text" placeholder="Search.."> -->
+
+		<div class="d-flex flex-column" id="myDIV">
+			<div class="container">
+				<div id="bella">
+					<h2 id="construction">SITE UNDER CONSTRUCTION</h2>
+					<div class="tile"> <img src="assets/bella.png" alt="blank" width="800" height="800"
+							style="vertical-align:bottom;">
+						<caption>Hi! I am Bella. I am the official mascot of this website.</caption>
+					</div>
+				</div>
+				<p></p>
+			</div>
+			<div class="challenge" style="flex-grow:1" id="challenge">
+				<h2></h2>
+				<blockquote style="margin-left: 25%; margin-right: 25%; text-align: center; color:#0a1a32;">
+				</blockquote>
+
+
+				<p></p>
+
+				<div id="statements">
+
+				</div>
+				<br>
+
+				<!-- <div>
+					<p><span id="text"> </span></p>
+					<div class="btn-container">
+						<button id="toggle"></button>
+					</div>
+
+					<br>
+					
+				</div> -->
+			</div>
+		</div>
+
+
+		<!-- <div id="about">
+			<h2 style="color:white; margin-left: 5%">About Me</h2>
+			<br>
+			<div class="card">
+				<img class="card-img-top" src="../assets/cartoonKathy.jpg" alt="cartoon">
+				<div class="card-body">
+					<h4 class="card-title">Kathy</h4> 
+					<p>Hi, I'm Kathy and I hope to fill this website with fun resources for afterschool programs. </p>
+					<br>
+					<a href="../html/about.html" class="btn btn-primary">See Profile</a>
+				</div>
+			</div>
+			<div class="about-site" id="info">
+				<p>
+				<p>
+				
+			</div>
+
+		</div> -->
+	</div>
+
+
+	<!-- javascript -->
+	<!-- This function toggles a read more button -->
+	<script>
+		$(document).ready(function () {
+			$("#myInput").on("keyup", function () {
+				var value = $(this).val().toLowerCase();
+				$("#myDIV *").filter(function () {
+					$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+				});
+			});
+		});
+	</script>
+
+	<!-- This function is for a Read more read less button -->
+	<!-- Code found on codepen legendaryPower "Simple Read Less Read More Button"-->
+	<script>
+		$(document).ready(function () {
+			$("#toggle").click(function () {
+				var elem = $("#toggle").text();
+				if (elem == "Answer") {
+					//Stuff to do when btn is in the read more state
+					$("#toggle").text("Close");
+					$("#text").slideDown();
+				} else {
+					//Stuff to do when btn is in the read less state
+					$("#toggle").text("Answer");
+					$("#text").slideUp();
+				}
+			});
+		});
+	</script>
+
+	<!--This function open and closes a curtain overlay -->
+
+	<script>
+		/* Open when someone clicks on the span element */
+		function openNav() {
+			document.getElementById("myNav").style.width = "100%";
+		}
+
+		/* Close when someone clicks on the "x" symbol inside the overlay */
+		function closeNav() {
+			document.getElementById("myNav").style.width = "0%";
+		}
+	</script>
+</body>
+
+</html>
