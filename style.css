@@ -117,7 +117,9 @@ div {
 
 iframe {
   margin-top: 2vh;
-  margin: auto;
+  width: 80vw;
+  margin-left: 10vw;
+  margin-right: 10vw;
 }
 
 a:link, a:visited {

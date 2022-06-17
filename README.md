@@ -16,4 +16,4 @@
 
 [Link to p5 sketch with "cross stitch pattern] https://editor.p5js.org/kfahn/sketches/5k39TY53-
 
-[Link to p5 sketch with "dogbone" pattern] https://editor.p5js.org/kfahn/sketches/uwzGRhQ-v
+[Link to p5 sketch with "barbell" pattern] https://editor.p5js.org/kfahn/sketches/uwzGRhQ-v
